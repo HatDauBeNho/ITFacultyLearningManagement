@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tb_accounts")
+@Table(name = "tb_account")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,14 +14,18 @@ import java.time.LocalDateTime;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer accountID;
-    @Column(name = "userName")
+    @Column(name = "account_id")
+    private Integer accountId;
+    @Column(name = "user_name")
     private String userName;
     @Column(name = "password")
     private String password;
+    @Column(name = "role")
     private String role;
+    @Column(name = "status")
     private Integer status;
+    @Column(name = "create_time")
     private LocalDateTime createTime;
+    @Column(name = "update_time")
     private LocalDateTime updateTime;
 }

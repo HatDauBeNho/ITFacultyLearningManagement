@@ -2,7 +2,7 @@
 //
 //import Haui.ITFacultyLearningManagement.custom.auth.login.request.LoginRequest;
 //import Haui.ITFacultyLearningManagement.custom.auth.login.response.LoginResponse;
-//import Haui.ITFacultyLearningManagement.custom.data.reponse.CustomResponse;
+//import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
 //import Haui.ITFacultyLearningManagement.entities.Account;
 //import Haui.ITFacultyLearningManagement.security.service.UserDetailsImpl;
 //import Haui.ITFacultyLearningManagement.service.AccountService;

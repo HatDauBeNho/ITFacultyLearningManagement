@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="tb_courses")
+@Table(name="tb_course")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,16 +19,36 @@ import java.time.LocalDateTime;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer courseID;
-    private Integer subjectID;
+    @Column(name = "course_id")
+    private Integer courseId;
+    @Column(name = "course_name")
+    private String courseName;
+    @Column(name = "current_student")
     private Integer currentStudent;
+    @Column(name = "maximum_student")
     private Integer maximumStudent;
-    private Integer teacherID;
+    @Column(name = "teacher_id")
+    private Integer teacherId;
+    @Column(name = "condition")
     private Integer condition;
+    @Column(name = "credit")
     private Integer credit;
+    @Column(name = "start_time")
     private LocalDate startTime;
+    @Column(name = "end_time")
     private LocalDate endTime;
+    @Column(name = "create_time")
     private LocalDateTime createTime;
+    @Column(name = "update_time")
     private LocalDateTime updateTime;
+
+    public Course(String courseName, Integer maximumStudent, Integer teacherId, Integer condition, Integer credit) {
+        this.courseName = courseName;
+        this.maximumStudent = maximumStudent;
+        this.teacherId = teacherId;
+        this.condition = condition;
+        this.credit = credit;
+        this.createTime = LocalDateTime.now();
+        this.updateTime = LocalDateTime.now();
+    }
 }

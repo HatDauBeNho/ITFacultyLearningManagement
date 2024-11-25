@@ -1,30 +1,29 @@
 package Haui.ITFacultyLearningManagement.entities;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tb_course_registration")
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CourseRegistration  {
+@Table(name = "tb_evaluate")
+public class Evaluate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "course_registration_id")
-    private Integer courseRegistrationId;
+    @Column(name = "evaluate_id")
+    private Integer evaluateId;
+    @Column(name = "teacher_id")
+    private Integer teacherId;
     @Column(name = "student_id")
     private Integer studentId;
-    @Column(name = "course_id")
-    private Integer courseId;
-    @Column(name = "point")
-    private double point;
+    @Column(name = "content")
+    private String content;
+    @Column(name = "rating")
+    private double rating;
     @Column(name = "create_time")
     private LocalDateTime createTime;
     @Column(name = "update_time")

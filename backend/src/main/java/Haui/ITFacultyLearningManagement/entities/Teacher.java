@@ -8,7 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="tb_teachers")
+@Table(name="tb_teacher")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,8 +16,10 @@ import javax.persistence.*;
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer teacherID;
-    private Integer accountID;
-    private Integer infoID;
+    @Column(name = "teacher_id")
+    private Integer teacherId;
+    @Column(name = "account_id")
+    private Integer accountId;
+    @Column(name = "info_id")
+    private Integer infoId;
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface TeacherRepository extends JpaRepository<Teacher,Integer> {
     @Query(value = """
             SELECT * FROM tb_teachers t
-            LEFT OUTER JOIN tb_infos i on t.infoId=i.infoId
+            LEFT OUTER JOIN tb_infos i on t.infoId = i.infoId
             WHERE  fullName= ?1 LIMIT 1
             """, nativeQuery = true)
     Optional<Teacher> findByName(String name);
