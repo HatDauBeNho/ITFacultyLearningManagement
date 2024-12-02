@@ -62,8 +62,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         http.exceptionHandling().authenticationEntryPoint(authEntryPointJwt());
 
         http.authorizeHttpRequests().antMatchers("/api/auth/login").permitAll()
+                .and().authorizeHttpRequests().antMatchers("/api/course/create").hasAuthority("1")
+                .and().authorizeHttpRequests().antMatchers("/api/course/update").hasAuthority("1")
+                .and().authorizeHttpRequests().antMatchers("/api/student").hasAuthority("1")
                 .and().authorizeHttpRequests().antMatchers("/api/course/register").hasAuthority("3")
-                .and().authorizeHttpRequests().antMatchers("/student/**").permitAll()
+                .and().authorizeHttpRequests().antMatchers("/api/course/registeredCourse").hasAuthority("3")
+                .and().authorizeHttpRequests().antMatchers("/api/course/cancel").hasAuthority("3")
+                .and().authorizeHttpRequests().antMatchers("/api/course/currentTaught").hasAuthority("2")
+
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .logout();

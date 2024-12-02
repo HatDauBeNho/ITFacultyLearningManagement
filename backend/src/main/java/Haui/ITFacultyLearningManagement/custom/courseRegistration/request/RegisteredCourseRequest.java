@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchRegisteredCourseRequest {
+public class RegisteredCourseRequest {
     private OptionRequest option;
 }

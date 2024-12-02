@@ -1,6 +1,6 @@
 package Haui.ITFacultyLearningManagement.repository;
 
-import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.SearchRegisteredCourseHandle;
+import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.RegisteredCourseHandle;
 import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +31,9 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
             inner join tb_course_registration r on c.course_id = r.course_id
             inner join tb_teacher t on c.teacher_id = t.teacher_id
             inner join tb_info i on t.info_id = i.info_id
+            where r.student_id = :studentId
             """, nativeQuery = true)
-    List<SearchRegisteredCourseHandle> getAllCourseRegistration(Pageable pageable);
+    List<RegisteredCourseHandle> getAllCourseRegistration(@Param("studentId") int studentId, Pageable pageable);
 
     @Query(value = """
             select count(c.course_name)
@@ -41,8 +41,9 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
             inner join tb_course_registration r on c.course_id = r.course_id
             inner join tb_teacher t on c.teacher_id = t.teacher_id
             inner join tb_info i on t.info_id = i.info_id
+            where r.student_id = :studentId
             """,nativeQuery = true)
-    Integer getTotal();
+    Integer getTotal(@Param("studentId") int studentId);
 
     @Query(value = """
             select *  from tb_course_registration where course_id=:courseId

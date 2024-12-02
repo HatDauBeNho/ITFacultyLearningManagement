@@ -39,7 +39,7 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
     @Query(value = """
             select course_id as courseId, course_name as courseName, current_student as currentStudent,
                 start_time as startTime, end_time as endTime
-            from tb_course where teacher_id = :teacherIds
+            from tb_course where teacher_id = :teacherId
             """,nativeQuery = true)
     List<CurrentTaughtHandle> getCurrentTaught(@Param("teacherId") int teacherId, Pageable pageable);
 

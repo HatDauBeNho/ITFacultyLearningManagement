@@ -3,9 +3,8 @@ package Haui.ITFacultyLearningManagement.service.impl;
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.course.request.CreateCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.course.response.CurrentTaughtResponse;
-import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.SearchRegisteredCourseHandle;
-import Haui.ITFacultyLearningManagement.custom.courseRegistration.response.SearchRegisteredCourseResponse;
-import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
+import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.RegisteredCourseHandle;
+import Haui.ITFacultyLearningManagement.custom.courseRegistration.response.RegisteredCourseResponse;
 import Haui.ITFacultyLearningManagement.entities.Course;
 import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
 import Haui.ITFacultyLearningManagement.repository.CourseRegistrationRepository;
@@ -13,10 +12,8 @@ import Haui.ITFacultyLearningManagement.repository.CourseRepository;
 import Haui.ITFacultyLearningManagement.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -153,10 +150,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public SearchRegisteredCourseResponse findCourseRegistrationBySearch(Pageable pageable) {
-        int total = courseRegistrationRepository.getTotal();
-        List<SearchRegisteredCourseHandle> data = courseRegistrationRepository.getAllCourseRegistration(pageable);
-        return new SearchRegisteredCourseResponse(total,data);
+    public RegisteredCourseResponse getCourseRegistration(int studentId,Pageable pageable) {
+        int total = courseRegistrationRepository.getTotal(studentId);
+        List<RegisteredCourseHandle> data = courseRegistrationRepository.getAllCourseRegistration(studentId,pageable);
+        return new RegisteredCourseResponse(total,data);
     }
 
     @Override

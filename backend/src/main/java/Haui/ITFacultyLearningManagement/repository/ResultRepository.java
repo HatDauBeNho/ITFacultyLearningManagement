@@ -1,7 +1,9 @@
 package Haui.ITFacultyLearningManagement.repository;
 
 import Haui.ITFacultyLearningManagement.custom.result.handle.ResultHandle;
-import org.hibernate.validator.constraints.ParameterScriptAssert;
+
+import Haui.ITFacultyLearningManagement.entities.Result;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ResultRepository {
+public interface ResultRepository extends JpaRepository<Result,Integer> {
     @Query(value = """
             select c.course_name as courseName, r.point
             from tb_course c

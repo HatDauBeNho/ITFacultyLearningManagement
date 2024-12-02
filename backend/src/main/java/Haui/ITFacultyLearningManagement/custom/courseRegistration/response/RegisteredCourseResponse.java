@@ -1,6 +1,6 @@
 package Haui.ITFacultyLearningManagement.custom.courseRegistration.response;
 
-import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.SearchRegisteredCourseHandle;
+import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.RegisteredCourseHandle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchRegisteredCourseResponse {
+public class RegisteredCourseResponse {
     private int total;
-    private List<SearchRegisteredCourseHandle> data;
+    private List<RegisteredCourseHandle> data;
 }

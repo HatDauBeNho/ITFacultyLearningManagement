@@ -6,7 +6,7 @@ import Haui.ITFacultyLearningManagement.custom.course.request.CurrentTaughtReque
 import Haui.ITFacultyLearningManagement.custom.course.request.SearchCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.course.request.UpdateCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.course.response.SearchCourseResponse;
-import Haui.ITFacultyLearningManagement.custom.courseRegistration.request.SearchRegisteredCourseRequest;
+import Haui.ITFacultyLearningManagement.custom.courseRegistration.request.RegisteredCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
 import Haui.ITFacultyLearningManagement.entities.Course;
 import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
@@ -122,9 +122,8 @@ public class CourseController {
         }
     }
 
-    //Sai
-    @GetMapping("searchRegisteredCourse")
-    public ResponseEntity<?> searchRegisteredCourse(@RequestBody SearchRegisteredCourseRequest request){
+    @GetMapping("registeredCourse")
+    public ResponseEntity<?> searchRegisteredCourse(@RequestBody RegisteredCourseRequest request){
         try {
             Pageable pageable;
             if (request.getOption().getOrder().equals("asc")) {
@@ -132,8 +131,12 @@ public class CourseController {
             } else {
                 pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("create_time").descending());
             }
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    courseService.findCourseRegistrationBySearch(pageable),
+                    courseService.getCourseRegistration(userDetails.getId(),pageable),
                     "Success get list registered course"));
         }catch (Exception e){
             e.printStackTrace();
