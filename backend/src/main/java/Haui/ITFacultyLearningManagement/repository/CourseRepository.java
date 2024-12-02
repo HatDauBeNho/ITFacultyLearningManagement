@@ -1,8 +1,8 @@
 package Haui.ITFacultyLearningManagement.repository;
 
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
+import Haui.ITFacultyLearningManagement.custom.course.handle.CurrentTaughtHandle;
 import Haui.ITFacultyLearningManagement.entities.Course;
-import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -36,4 +36,16 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
             """,nativeQuery = true)
     Optional<Course> findByCourseName(String courseName);
 
+    @Query(value = """
+            select course_id as courseId, course_name as courseName, current_student as currentStudent,
+                start_time as startTime, end_time as endTime
+            from tb_course where teacher_id = :teacherIds
+            """,nativeQuery = true)
+    List<CurrentTaughtHandle> getCurrentTaught(@Param("teacherId") int teacherId, Pageable pageable);
+
+    @Query(value = """
+            select count(course_id)
+            from tb_course where teacher_id = :teacherId
+            """, nativeQuery = true)
+    int getTotalCurrentTaught(@Param("teacherId") int teacherId);
 }

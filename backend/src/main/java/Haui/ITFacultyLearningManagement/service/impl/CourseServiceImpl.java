@@ -2,6 +2,7 @@ package Haui.ITFacultyLearningManagement.service.impl;
 
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.course.request.CreateCourseRequest;
+import Haui.ITFacultyLearningManagement.custom.course.response.CurrentTaughtResponse;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.SearchRegisteredCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.response.SearchRegisteredCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
@@ -178,5 +179,10 @@ public class CourseServiceImpl implements CourseService {
 
         courseRegistrationRepository.deleteById(courseRegistrationId);
         return true;
+    }
+
+    @Override
+    public CurrentTaughtResponse getCurrentTaught(int teacherId, Pageable pageable) {
+        return new CurrentTaughtResponse(courseRepository.getTotalCurrentTaught(teacherId),courseRepository.getCurrentTaught(teacherId, pageable));
     }
 }

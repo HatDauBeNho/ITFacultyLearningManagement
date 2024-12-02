@@ -2,6 +2,7 @@ package Haui.ITFacultyLearningManagement.service;
 
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.course.request.CreateCourseRequest;
+import Haui.ITFacultyLearningManagement.custom.course.response.CurrentTaughtResponse;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.response.SearchRegisteredCourseResponse;
 import Haui.ITFacultyLearningManagement.entities.Course;
 import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
@@ -35,6 +36,8 @@ public interface CourseService extends Generate<Course> {
     Optional<CourseRegistration> findReByStuIdAndCourseId(int courseId,int studentId);
 
     boolean deleteCourseRegistration(int courseRegistrationId);
+
+    CurrentTaughtResponse getCurrentTaught(int teacherId, Pageable pageable);
 
 
 }

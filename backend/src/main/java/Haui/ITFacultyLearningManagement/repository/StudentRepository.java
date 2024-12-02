@@ -28,4 +28,9 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
             """,nativeQuery = true)
     Integer getTotal(@Param("keySearch") String keySearch);
 
+    @Query(value = """
+            select gpa from tb_student where student_id = studentId
+            """,nativeQuery = true)
+    double getGpa(@Param("studentId") int studentId);
+
 }
