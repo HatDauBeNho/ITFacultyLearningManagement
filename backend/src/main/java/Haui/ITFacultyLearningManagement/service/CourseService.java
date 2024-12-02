@@ -2,9 +2,10 @@ package Haui.ITFacultyLearningManagement.service;
 
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.course.request.CreateCourseRequest;
+import Haui.ITFacultyLearningManagement.custom.courseRegistration.response.SearchRegisteredCourseResponse;
 import Haui.ITFacultyLearningManagement.entities.Course;
+import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 
 
 import java.util.List;
@@ -17,6 +18,23 @@ public interface CourseService extends Generate<Course> {
 
     Optional<Course> findByCourseName(String courseName);
 
-    Integer totalAllCourse(@Param("keySearch") String keySearch);
+    Integer totalAllCourse(String keySearch);
+
+    Optional<CourseRegistration> findByName(String name);
+
+    List<CourseRegistration> findByStudentId(Integer studentId);
+
+    double getGPA(Integer studentId);
+
+    boolean checkCondition(int courseId, int studentId);
+
+    boolean registerCourse(int courseId, int studentId);
+
+    SearchRegisteredCourseResponse findCourseRegistrationBySearch(Pageable pageable);
+
+    Optional<CourseRegistration> findReByStuIdAndCourseId(int courseId,int studentId);
+
+    boolean deleteCourseRegistration(int courseRegistrationId);
+
 
 }

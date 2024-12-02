@@ -12,8 +12,8 @@ public class LoginResponse {
     @JsonProperty(value = "userName")
     private String username;
     @JsonProperty(value = "role")
-    private String role;
-    @JsonProperty(value = "status")
-    private int status;
+    private int role;
+    @JsonProperty(value = "token")
+    private String token;
 
 }

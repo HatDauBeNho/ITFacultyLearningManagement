@@ -12,11 +12,11 @@ import java.util.Optional;
 public interface TeacherRepository extends JpaRepository<Teacher,Integer> {
     @Query(value = """
             SELECT * FROM tb_teachers t
-            LEFT OUTER JOIN tb_infos i on t.infoId = i.infoId
-            WHERE  fullName= ?1 LIMIT 1
+            LEFT OUTER JOIN tb_info i on t.infoId = i.infoId
+            WHERE  full_name= ?1 LIMIT 1
             """, nativeQuery = true)
     Optional<Teacher> findByName(String name);
 
-    @Query(value = "SELECT * FROM teachers t LEFT OUTER JOIN infors i on t.inforId=i.inforId WHERE  teacherId= ?1 LIMIT 1", nativeQuery = true)
-    Optional<Info> getTeacherInfor(int id);
+    @Query(value = "SELECT * FROM tb_teacher t LEFT OUTER JOIN infors i on t.inforId=i.inforId WHERE  teacher_id= ?1 LIMIT 1", nativeQuery = true)
+    Optional<Info> getTeacherInfo(int id);
 }

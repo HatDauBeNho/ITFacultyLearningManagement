@@ -29,4 +29,11 @@ public class CourseRegistration  {
     private LocalDateTime createTime;
     @Column(name = "update_time")
     private LocalDateTime updateTime;
+
+    public CourseRegistration(Integer studentId, Integer courseId) {
+        this.studentId = studentId;
+        this.courseId = courseId;
+        this.createTime = LocalDateTime.now();
+        this.updateTime = LocalDateTime.now();
+    }
 }

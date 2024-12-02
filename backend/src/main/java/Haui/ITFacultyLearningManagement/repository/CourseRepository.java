@@ -2,6 +2,7 @@ package Haui.ITFacultyLearningManagement.repository;
 
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
 import Haui.ITFacultyLearningManagement.entities.Course;
+import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +35,5 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
             select * from tb_course where course_name = ?1 limit 1
             """,nativeQuery = true)
     Optional<Course> findByCourseName(String courseName);
+
 }

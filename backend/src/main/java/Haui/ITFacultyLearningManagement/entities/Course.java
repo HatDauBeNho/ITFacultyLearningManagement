@@ -46,6 +46,7 @@ public class Course {
         this.courseName = courseName;
         this.maximumStudent = maximumStudent;
         this.teacherId = teacherId;
+        this.currentStudent = 0;
         this.condition = condition;
         this.credit = credit;
         this.createTime = LocalDateTime.now();

@@ -9,6 +9,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateCourseRequest {
-    private Integer id;
+    private Integer courseId;
     private LocalDate startTime;
 }

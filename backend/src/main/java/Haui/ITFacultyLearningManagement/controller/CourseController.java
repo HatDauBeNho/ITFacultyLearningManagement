@@ -5,24 +5,24 @@ import Haui.ITFacultyLearningManagement.custom.course.request.CreateCourseReques
 import Haui.ITFacultyLearningManagement.custom.course.request.SearchCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.course.request.UpdateCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.course.response.SearchCourseResponse;
+import Haui.ITFacultyLearningManagement.custom.courseRegistration.request.SearchRegisteredCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
 import Haui.ITFacultyLearningManagement.entities.Course;
+import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
 import Haui.ITFacultyLearningManagement.entities.Teacher;
+import Haui.ITFacultyLearningManagement.security.service.UserDetailsImpl;
 import Haui.ITFacultyLearningManagement.service.CourseService;
 import Haui.ITFacultyLearningManagement.service.TeacherService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,11 +81,11 @@ public class CourseController {
         }
     }
 
-    @PutMapping("update")
+    @PutMapping("/update")
     public ResponseEntity<?> updateCourse(@RequestBody UpdateCourseRequest request)
     {
         try{
-            Optional<Course> courseOptional = courseService.findById(request.getId());
+            Optional<Course> courseOptional = courseService.findById(request.getCourseId());
             if (courseOptional.isEmpty())
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course isn't exits"));
 
@@ -107,15 +107,75 @@ public class CourseController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteCourse(@RequestParam("id") Integer id){
+    public ResponseEntity<?> deleteCourse(@RequestParam("courseId") Integer courseId){
         try{
-            Optional<Course> courseOptional = courseService.findById(id);
+            Optional<Course> courseOptional = courseService.findById(courseId);
             if (courseOptional.isEmpty())
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course isn't exits"));
 
-            courseService.deleteById(id);
+            courseService.deleteById(courseId);
             return ResponseEntity.ok(new CustomResponse<>(1, null, "Success delete course"));
 
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));
+        }
+    }
+
+    @GetMapping("searchRegisteredCourse")
+    public ResponseEntity<?> searchRegisteredCourse(@RequestBody SearchRegisteredCourseRequest request){
+        try {
+            Pageable pageable;
+            if (request.getOption().getOrder().equals("asc")) {
+                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("create_time").ascending());
+            } else {
+                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("create_time").descending());
+            }
+            return ResponseEntity.ok(new CustomResponse<>(1,
+                    courseService.findCourseRegistrationBySearch(pageable),
+                    "Success get list registered course"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/register")
+    public  ResponseEntity<?> registerCourse(@RequestParam("courseId") Integer courseId){
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+            if (!courseService.checkCondition(courseId,userDetails.getId())){
+                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Not eligible to register"));
+            }
+
+            if (!courseService.registerCourse(courseId, userDetails.getId())){
+                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Can't register"));
+            }
+
+            return ResponseEntity.ok(new CustomResponse<>(1, null, "Success register course"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<?> cancelRegisteredCourse(@RequestParam("courseId") Integer courseId){
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+            Optional<CourseRegistration> courseRegistrationOptional = courseService.findReByStuIdAndCourseId(courseId, userDetails.getId());
+            if (courseRegistrationOptional.isEmpty())
+                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Not found registered course"));
+
+            if (!courseService.deleteCourseRegistration(courseRegistrationOptional.get().getCourseRegistrationId())){
+                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Can't cancel"));
+            }
+
+            return ResponseEntity.ok(new CustomResponse<>(1, null, "Success delete course"));
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));

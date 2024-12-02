@@ -21,7 +21,7 @@ public class Account {
     @Column(name = "password")
     private String password;
     @Column(name = "role")
-    private String role;
+    private Integer role;
     @Column(name = "status")
     private Integer status;
     @Column(name = "create_time")

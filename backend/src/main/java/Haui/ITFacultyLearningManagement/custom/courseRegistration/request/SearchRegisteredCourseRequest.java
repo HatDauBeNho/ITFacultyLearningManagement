@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchCourseRegistration {
-    private String keySearch;
+public class SearchRegisteredCourseRequest {
     private OptionRequest option;
 }
