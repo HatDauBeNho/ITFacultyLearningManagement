@@ -21,8 +21,8 @@ public class CourseRegistration  {
     private Integer courseRegistrationId;
     @Column(name = "student_id")
     private Integer studentId;
-    @Column(name = "course_id")
-    private Integer courseId;
+    @Column(name = "class_id")
+    private Integer classId;
     @Column(name = "point")
     private double point;
     @Column(name = "create_time")
@@ -30,9 +30,9 @@ public class CourseRegistration  {
     @Column(name = "update_time")
     private LocalDateTime updateTime;
 
-    public CourseRegistration(Integer studentId, Integer courseId) {
+    public CourseRegistration(Integer studentId, Integer classId) {
         this.studentId = studentId;
-        this.courseId = courseId;
+        this.classId = classId;
         this.createTime = LocalDateTime.now();
         this.updateTime = LocalDateTime.now();
     }

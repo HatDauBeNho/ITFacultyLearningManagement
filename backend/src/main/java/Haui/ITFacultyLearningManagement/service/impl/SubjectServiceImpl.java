@@ -1,17 +1,17 @@
 package Haui.ITFacultyLearningManagement.service.impl;
 
-import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
+import Haui.ITFacultyLearningManagement.custom.subject.handle.ListSubjectHandle;
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListStudentInCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.course.request.CreateCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.course.response.CurrentTaughtResponse;
 import Haui.ITFacultyLearningManagement.custom.course.response.ListStudentInCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.RegisteredCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.response.RegisteredCourseResponse;
-import Haui.ITFacultyLearningManagement.entities.Course;
+import Haui.ITFacultyLearningManagement.entities.Subject;
 import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
 import Haui.ITFacultyLearningManagement.repository.CourseRegistrationRepository;
-import Haui.ITFacultyLearningManagement.repository.CourseRepository;
-import Haui.ITFacultyLearningManagement.service.CourseService;
+import Haui.ITFacultyLearningManagement.repository.SubjectRepository;
+import Haui.ITFacultyLearningManagement.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,41 +24,41 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CourseServiceImpl implements CourseService {
+public class SubjectServiceImpl implements SubjectService {
     @Autowired
-    private CourseRepository courseRepository;
+    private SubjectRepository subjectRepository;
 
     @Autowired
     private CourseRegistrationRepository courseRegistrationRepository;
 
     @Override
-    public List<Course> findAll() {
-        return courseRepository.findAll();
+    public List<Subject> findAll() {
+        return subjectRepository.findAll();
     }
 
     @Override
-    public Optional<Course> findById(Integer id) {
-        return courseRepository.findById(id);
+    public Optional<Subject> findById(Integer id) {
+        return subjectRepository.findById(id);
     }
 
     @Override
-    public Course save(Course course) {
-        return courseRepository.save(course);
+    public Subject save(Subject subject) {
+        return subjectRepository.save(subject);
     }
 
     @Override
     public void deleteById(Integer id) {
-        courseRepository.deleteById(id);
+        subjectRepository.deleteById(id);
     }
 
     @Override
-    public List<ListCourseHandle> getAllCourse(String keySearch, Pageable pageable) {
-        return courseRepository.getAllCourse(keySearch,pageable);
+    public List<ListSubjectHandle> getAllCourse(String keySearch, Pageable pageable) {
+        return subjectRepository.getAllCourse(keySearch,pageable);
     }
 
     @Override
-    public Course saveCourse(CreateCourseRequest request) {
-        Course course = new Course(
+    public Subject saveCourse(CreateCourseRequest request) {
+        Subject subject = new Subject(
                 request.getCourseName(),
                 request.getMaximumStudent(),
                 request.getTeacherId(),
@@ -66,17 +66,17 @@ public class CourseServiceImpl implements CourseService {
                 request.getCredit()
         );
 
-        return courseRepository.save(course);
+        return subjectRepository.save(subject);
     }
 
     @Override
-    public Optional<Course> findByCourseName(String courseName) {
-        return courseRepository.findByCourseName(courseName);
+    public Optional<Subject> findByCourseName(String courseName) {
+        return subjectRepository.findByCourseName(courseName);
     }
 
     @Override
     public Integer totalAllCourse(String keySearch) {
-        return courseRepository.totalAllCourse(keySearch);
+        return subjectRepository.totalAllCourse(keySearch);
     }
 
     @Override
@@ -105,12 +105,12 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public boolean checkCondition(int courseId, int studentId) {
-        Optional<Course> courseOptional = courseRepository.findById(courseId);
+        Optional<Subject> courseOptional = subjectRepository.findById(courseId);
         if (courseOptional.isEmpty())
             return false;
 
-        Course  course = courseOptional.get();
-        if (course.getStartTime().minusWeeks(1).isAfter(LocalDate.now()))
+        Subject subject = courseOptional.get();
+        if (subject.getStartTime().minusWeeks(1).isAfter(LocalDate.now()))
         {
             return false;
         }
@@ -119,7 +119,7 @@ public class CourseServiceImpl implements CourseService {
         if (courseRegistrationOptional.isPresent())
             return  false;
 
-        int condition = course.getCondition();
+        int condition = subject.getCondition();
         if (condition == 0)
             return true;
 
@@ -139,14 +139,14 @@ public class CourseServiceImpl implements CourseService {
                 studentId,
                 courseId
         );
-        Optional<Course> courseOptional =  courseRepository.findById(courseId);
+        Optional<Subject> courseOptional =  subjectRepository.findById(courseId);
         if (courseOptional.isEmpty()) {
             return false;
         }
-        Course course =  courseOptional.get();
-        course.setCurrentStudent(course.getCurrentStudent() + 1);
-        course.setUpdateTime(LocalDateTime.now());
-        courseRepository.save(course);
+        Subject subject =  courseOptional.get();
+        subject.setCurrentStudent(subject.getCurrentStudent() + 1);
+        subject.setUpdateTime(LocalDateTime.now());
+        subjectRepository.save(subject);
         courseRegistrationRepository.save(courseRegistration);
         return true;
     }
@@ -169,12 +169,12 @@ public class CourseServiceImpl implements CourseService {
         if (courseRegistrationOptional.isEmpty())
             return false;
 
-        Optional<Course> courseOptional= courseRepository.findById(courseRegistrationOptional.get().getCourseId());
+        Optional<Subject> courseOptional= subjectRepository.findById(courseRegistrationOptional.get().getCourseId());
         if (courseOptional.isEmpty())
             return false;
 
-        Course course = courseOptional.get();
-        course.setCurrentStudent(course.getCurrentStudent()-1);
+        Subject subject = courseOptional.get();
+        subject.setCurrentStudent(subject.getCurrentStudent()-1);
 
         courseRegistrationRepository.deleteById(courseRegistrationId);
         return true;
@@ -182,13 +182,13 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CurrentTaughtResponse getCurrentTaught(int teacherId, Pageable pageable) {
-        return new CurrentTaughtResponse(courseRepository.getTotalCurrentTaught(teacherId),courseRepository.getCurrentTaught(teacherId, pageable));
+        return new CurrentTaughtResponse(subjectRepository.getTotalCurrentTaught(teacherId), subjectRepository.getCurrentTaught(teacherId, pageable));
     }
 
     @Override
     public ListStudentInCourseResponse getListStuInCourse( int teacherId, String keySearch, Pageable pageable) {
-        int total = courseRepository.getTotalListStuInCourse(keySearch,teacherId);
-        List<ListStudentInCourseHandle> list = courseRepository.getListStuInCourse(keySearch,teacherId,pageable);
+        int total = subjectRepository.getTotalListStuInCourse(keySearch,teacherId);
+        List<ListStudentInCourseHandle> list = subjectRepository.getListStuInCourse(keySearch,teacherId,pageable);
         return new ListStudentInCourseResponse(total,list);
     }
 }
