@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EnterResultRequest {
-    private int courseId;
+    private int classId;
     private int studentId;
     private double point;
 }

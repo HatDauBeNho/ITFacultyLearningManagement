@@ -17,6 +17,7 @@ public class ResultController {
     @Autowired
     private CourseRegistrationService courseRegistrationService;
 
+    //chua test
     @GetMapping("/get")
     public ResponseEntity<?> getResult(){
         try{

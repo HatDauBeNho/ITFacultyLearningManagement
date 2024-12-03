@@ -12,8 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CreateCourseRequest {
     private String courseName;
-    private Integer maximumStudent;
-    private Integer teacherId;
     private Integer condition;
     private Integer credit;
 }

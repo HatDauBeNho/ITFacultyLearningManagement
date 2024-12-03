@@ -1,12 +1,13 @@
-package Haui.ITFacultyLearningManagement.custom.course.handle;
+package Haui.ITFacultyLearningManagement.custom.classroom.handle;
 
 import java.time.LocalDate;
 
-public interface CurrentTaughtHandle {
-    int getCourseId();
+public interface GetClassroomHandle {
     String getCourseName();
     int getCurrentStudent();
     int getMaximumStudent();
+    String getTeacherName();
     LocalDate getStartTime();
     LocalDate getEndTime();
+
 }

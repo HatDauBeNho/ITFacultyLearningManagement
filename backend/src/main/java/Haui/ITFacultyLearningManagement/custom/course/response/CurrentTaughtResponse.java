@@ -11,6 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CurrentTaughtResponse {
-    private int total;
     private List<CurrentTaughtHandle> data;
 }

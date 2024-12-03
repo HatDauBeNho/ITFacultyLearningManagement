@@ -80,9 +80,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         http.exceptionHandling().authenticationEntryPoint(authEntryPointJwt());
 
         http.authorizeHttpRequests().antMatchers("/api/auth/login").permitAll()
-                .antMatchers(adminApi).hasAuthority("1")
-                .antMatchers(lectureApi).hasAuthority("2")
-                .antMatchers(studentApi).hasAuthority("3")
+//                .antMatchers(adminApi).hasAuthority("1")
+//                .antMatchers(lectureApi).hasAuthority("2")
+//                .antMatchers(studentApi).hasAuthority("3")
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .logout();

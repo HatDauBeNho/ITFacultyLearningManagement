@@ -5,11 +5,13 @@ import Haui.ITFacultyLearningManagement.custom.course.request.*;
 import Haui.ITFacultyLearningManagement.custom.course.response.SearchCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.request.RegisteredCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
-import Haui.ITFacultyLearningManagement.entities.Subject;
+import Haui.ITFacultyLearningManagement.entities.Classroom;
+import Haui.ITFacultyLearningManagement.entities.Course;
 import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
 import Haui.ITFacultyLearningManagement.entities.Teacher;
 import Haui.ITFacultyLearningManagement.security.service.UserDetailsImpl;
-import Haui.ITFacultyLearningManagement.service.SubjectService;
+import Haui.ITFacultyLearningManagement.service.ClassroomService;
+import Haui.ITFacultyLearningManagement.service.CourseService;
 import Haui.ITFacultyLearningManagement.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,14 +23,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/subject")
-public class SubjectController {
+@RequestMapping("/api/course")
+public class CourseController {
     @Autowired
-    private SubjectService subjectService;
+    private CourseService courseService;
+
+    @Autowired
+    private ClassroomService classroomService;
 
     @Autowired
     private TeacherService teacherService;
@@ -43,8 +49,8 @@ public class SubjectController {
                 pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("create_time").descending());
             }
 
-            Integer total =  subjectService.totalAllCourse(request.getKeySearch());
-            List<ListSubjectHandle> courseHandleList =  subjectService.getAllCourse(request.getKeySearch(),pageable);
+            Integer total =  courseService.totalAllCourse(request.getKeySearch());
+            List<ListSubjectHandle> courseHandleList =  courseService.getCourseBySearch(request.getKeySearch(),pageable);
 
             return ResponseEntity.ok(new CustomResponse<>(1, new SearchCourseResponse(total, courseHandleList), "Success get list course"));
         }catch (Exception e){
@@ -57,18 +63,15 @@ public class SubjectController {
     public ResponseEntity<?> createCourse(@RequestBody CreateCourseRequest request)
     {
         try{
-            Optional<Subject> courseOptional = subjectService.findByCourseName(request.getCourseName());
+            Optional<Course> courseOptional = courseService.findByCourseName(request.getCourseName());
             if (courseOptional.isPresent())
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course already exits"));
 
-            if (request.getMaximumStudent() > 100 )
-                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Too many student"));
+            Optional<Course> conditionOptional= courseService.findById(request.getCondition());
+            if (conditionOptional.isEmpty())
+                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course condition isn't exits"));
 
-            Optional<Teacher> teacherOptional = teacherService.findById(request.getTeacherId());
-            if (teacherOptional.isEmpty())
-                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Teacher isn't exits"));
-
-            subjectService.saveCourse(request);
+            courseService.saveCourse(request);
             return ResponseEntity.ok(new CustomResponse<>(1, null, "Success create course"));
 
         }catch (Exception e){
@@ -82,18 +85,15 @@ public class SubjectController {
     public ResponseEntity<?> updateCourse(@RequestBody UpdateCourseRequest request)
     {
         try{
-            Optional<Subject> courseOptional = subjectService.findById(request.getCourseId());
+            Optional<Course> courseOptional = courseService.findById(request.getCourseId());
             if (courseOptional.isEmpty())
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course isn't exits"));
 
-            if ( request.getStartTime().isBefore(LocalDate.now())) {
-                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Invalid time period"));
-            }
-
-            Subject subject = courseOptional.get();
-            subject.setStartTime(request.getStartTime());
-            subject.setEndTime(request.getStartTime().plusMonths(3));
-            subjectService.save(subject);
+            Course course = courseOptional.get();
+            course.setCourseName(request.getCourseName());
+            course.setCredit(request.getCredit());
+            course.setUpdateTime(LocalDateTime.now());
+            courseService.save(course);
 
             return ResponseEntity.ok(new CustomResponse<>(1, null, "Success update course"));
 
@@ -106,11 +106,11 @@ public class SubjectController {
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteCourse(@RequestParam("courseId") Integer courseId){
         try{
-            Optional<Subject> courseOptional = subjectService.findById(courseId);
+            Optional<Course> courseOptional = courseService.findById(courseId);
             if (courseOptional.isEmpty())
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course isn't exits"));
 
-            subjectService.deleteById(courseId);
+            courseService.deleteById(courseId);
             return ResponseEntity.ok(new CustomResponse<>(1, null, "Success delete course"));
 
         }catch (Exception e){
@@ -119,6 +119,7 @@ public class SubjectController {
         }
     }
 
+    //chua test
     @GetMapping("registeredCourse")
     public ResponseEntity<?> searchRegisteredCourse(@RequestBody RegisteredCourseRequest request){
         try {
@@ -133,7 +134,7 @@ public class SubjectController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    subjectService.getCourseRegistration(userDetails.getId(),pageable),
+                    courseService.getCourseRegistration(userDetails.getId(),pageable),
                     "Success get list registered course"));
         }catch (Exception e){
             e.printStackTrace();
@@ -142,18 +143,13 @@ public class SubjectController {
     }
 
     @PostMapping("/register")
-    public  ResponseEntity<?> registerCourse(@RequestParam("courseId") Integer courseId){
+    public  ResponseEntity<?> registerCourse(@RequestParam("classId") Integer classId){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-            if (!subjectService.checkCondition(courseId,userDetails.getId())){
-                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Not eligible to register"));
-            }
-
-            if (!subjectService.registerCourse(courseId, userDetails.getId())){
+            if (!courseService.registerCourse(classId, userDetails.getId()))
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Can't register"));
-            }
 
             return ResponseEntity.ok(new CustomResponse<>(1, null, "Success register course"));
         }catch (Exception e){
@@ -163,16 +159,12 @@ public class SubjectController {
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity<?> cancelRegisteredCourse(@RequestParam("courseId") Integer courseId){
+    public ResponseEntity<?> cancelRegisteredCourse(@RequestParam("classId") Integer classId){
         try{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-            Optional<CourseRegistration> courseRegistrationOptional = subjectService.findReByStuIdAndCourseId(courseId, userDetails.getId());
-            if (courseRegistrationOptional.isEmpty())
-                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Not found registered course"));
-
-            if (!subjectService.deleteCourseRegistration(courseRegistrationOptional.get().getCourseRegistrationId())){
+            if (!courseService.cancelCourse(classId, userDetails.getId())){
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Can't cancel"));
             }
 
@@ -184,31 +176,24 @@ public class SubjectController {
     }
 
     @GetMapping("/currentTaught")
-    public ResponseEntity<?> searchCurrentTaught(@RequestBody CurrentTaughtRequest request){
+    public ResponseEntity<?> getListCurrentTaught(){
         try{
-            Pageable pageable;
-            if (request.getOption().getOrder().equals("asc")) {
-                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("create_time").ascending());
-            } else {
-                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("create_time").descending());
-            }
-
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    subjectService.getCurrentTaught(userDetails.getId(), pageable)
-                    ,"Success delete course"));
+                    courseService.getCurrentTaught(userDetails.getId())
+                    ,"Success get list current taught"));
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));
         }
     }
-
+    //chua test
     @GetMapping("/getListStudent")
     public ResponseEntity<?> getListStudentInCourse(@RequestBody ListStudentInCourseRequest request) {
         try{
-            Optional<Subject> courseOptional = subjectService.findById(request.getCourseId());
+            Optional<Course> courseOptional = courseService.findById(request.getCourseId());
             if (courseOptional.isEmpty())
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course isn't exits"));
 
@@ -223,7 +208,7 @@ public class SubjectController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    subjectService.getListStuInCourse(userDetails.getId(), request.getKeySearch(),pageable)
+                    courseService.getListStuInCourse(userDetails.getId(), request.getKeySearch(),pageable)
                     ,"Success delete course"));
         }catch (Exception e){
             e.printStackTrace();

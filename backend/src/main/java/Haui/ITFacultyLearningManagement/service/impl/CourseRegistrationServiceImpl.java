@@ -48,7 +48,7 @@ public class CourseRegistrationServiceImpl implements CourseRegistrationService 
     @Transactional
     @Override
     public boolean enterResult(EnterResultRequest request) {
-        Optional<CourseRegistration> courseRegistrationOptional =  courseRegistrationRepository.findByStudentIdAndCourseId(request.getCourseId(), request.getStudentId());
+        Optional<CourseRegistration> courseRegistrationOptional =  courseRegistrationRepository.findByStuAndClass(request.getStudentId(), request.getClassId());
         if (courseRegistrationOptional.isEmpty()){
             return false;
         }

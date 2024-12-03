@@ -17,6 +17,9 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
     @Query(value = "SELECT * FROM tb_course_registration WHERE course_registration_name = ?1 LIMIT 1", nativeQuery = true)
     Optional<CourseRegistration> findByName(String name);
 
+    @Query(value = "select * from tb_course_registration where student_id=?1 and class_id=?2 limit 1", nativeQuery = true)
+    Optional<CourseRegistration> findByStuAndClass(int studentId, int classId);
+
     @Query(value = "select * from tb_course_registration where student_id=?1",nativeQuery = true)
     List<CourseRegistration> findByStudentId(Integer studentId);
 

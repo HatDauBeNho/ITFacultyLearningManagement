@@ -3,7 +3,7 @@ package Haui.ITFacultyLearningManagement.repository;
 import Haui.ITFacultyLearningManagement.custom.subject.handle.ListSubjectHandle;
 import Haui.ITFacultyLearningManagement.custom.course.handle.CurrentTaughtHandle;
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListStudentInCourseHandle;
-import Haui.ITFacultyLearningManagement.entities.Subject;
+import Haui.ITFacultyLearningManagement.entities.Course;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SubjectRepository extends JpaRepository<Subject,Integer> {
+public interface CourseRepository extends JpaRepository<Course,Integer> {
     @Query(value = """
-            select c.course_name as courseName, c.credit
+            select course_name as courseName, credit, create_time as createTime
             from tb_course c
             WHERE unaccent(c.course_name) ILIKE  %:keySearch%
             """,nativeQuery = true)
-    List<ListSubjectHandle> getSubjectBySearch(@Param("keySearch") String keySearch, Pageable pageable);
+    List<ListSubjectHandle> getCourseBySearch(@Param("keySearch") String keySearch, Pageable pageable);
 
     @Query(value = """
             select count(course_name)
@@ -33,7 +33,7 @@ public interface SubjectRepository extends JpaRepository<Subject,Integer> {
     @Query(value = """
             select * from tb_course where course_name = ?1 limit 1
             """,nativeQuery = true)
-    Optional<Subject> findByCourseName(String courseName);
+    Optional<Course> findByCourseName(String courseName);
 
     @Query(value = """
             select course_id as courseId, course_name as courseName, current_student as currentStudent,
