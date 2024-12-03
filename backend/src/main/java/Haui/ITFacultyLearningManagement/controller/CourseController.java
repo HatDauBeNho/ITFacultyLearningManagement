@@ -1,10 +1,7 @@
 package Haui.ITFacultyLearningManagement.controller;
 
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
-import Haui.ITFacultyLearningManagement.custom.course.request.CreateCourseRequest;
-import Haui.ITFacultyLearningManagement.custom.course.request.CurrentTaughtRequest;
-import Haui.ITFacultyLearningManagement.custom.course.request.SearchCourseRequest;
-import Haui.ITFacultyLearningManagement.custom.course.request.UpdateCourseRequest;
+import Haui.ITFacultyLearningManagement.custom.course.request.*;
 import Haui.ITFacultyLearningManagement.custom.course.response.SearchCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.request.RegisteredCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
@@ -186,7 +183,6 @@ public class CourseController {
         }
     }
 
-    //chua test
     @GetMapping("/currentTaught")
     public ResponseEntity<?> searchCurrentTaught(@RequestBody CurrentTaughtRequest request){
         try{
@@ -209,4 +205,29 @@ public class CourseController {
         }
     }
 
+    @GetMapping("/getListStudent")
+    public ResponseEntity<?> getListStudentInCourse(@RequestBody ListStudentInCourseRequest request) {
+        try{
+            Optional<Course> courseOptional = courseService.findById(request.getCourseId());
+            if (courseOptional.isEmpty())
+                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course isn't exits"));
+
+            Pageable pageable;
+            if (request.getOption().getOrder().equals("asc")) {
+                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("full_name").ascending());
+            } else {
+                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("full_name").descending());
+            }
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+            return ResponseEntity.ok(new CustomResponse<>(1,
+                    courseService.getListStuInCourse(userDetails.getId(), request.getKeySearch(),pageable)
+                    ,"Success delete course"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));
+        }
+    }
 }

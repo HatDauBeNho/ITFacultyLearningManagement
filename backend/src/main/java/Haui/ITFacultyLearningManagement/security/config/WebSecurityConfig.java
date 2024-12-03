@@ -56,20 +56,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
     }
 
+    String[] adminApi = {
+            "/api/course/create",
+            "/api/course/update",
+            "/api/student"
+    };
+
+    String[] lectureApi = {
+            "/api/course/currentTaught",
+            "/api/result/enter"
+    };
+
+    String[] studentApi = {
+            "/api/course/register",
+            "/api/course/registeredCourse",
+            "/api/result/get",
+            "/api/course/cancel"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
         http.exceptionHandling().authenticationEntryPoint(authEntryPointJwt());
 
         http.authorizeHttpRequests().antMatchers("/api/auth/login").permitAll()
-                .and().authorizeHttpRequests().antMatchers("/api/course/create").hasAuthority("1")
-                .and().authorizeHttpRequests().antMatchers("/api/course/update").hasAuthority("1")
-                .and().authorizeHttpRequests().antMatchers("/api/student").hasAuthority("1")
-                .and().authorizeHttpRequests().antMatchers("/api/course/register").hasAuthority("3")
-                .and().authorizeHttpRequests().antMatchers("/api/course/registeredCourse").hasAuthority("3")
-                .and().authorizeHttpRequests().antMatchers("/api/course/cancel").hasAuthority("3")
-                .and().authorizeHttpRequests().antMatchers("/api/course/currentTaught").hasAuthority("2")
-
+                .antMatchers(adminApi).hasAuthority("1")
+                .antMatchers(lectureApi).hasAuthority("2")
+                .antMatchers(studentApi).hasAuthority("3")
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .logout();

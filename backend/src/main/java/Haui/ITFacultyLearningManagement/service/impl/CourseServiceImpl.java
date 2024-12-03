@@ -1,8 +1,10 @@
 package Haui.ITFacultyLearningManagement.service.impl;
 
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
+import Haui.ITFacultyLearningManagement.custom.course.handle.ListStudentInCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.course.request.CreateCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.course.response.CurrentTaughtResponse;
+import Haui.ITFacultyLearningManagement.custom.course.response.ListStudentInCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.RegisteredCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.response.RegisteredCourseResponse;
 import Haui.ITFacultyLearningManagement.entities.Course;
@@ -181,5 +183,12 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CurrentTaughtResponse getCurrentTaught(int teacherId, Pageable pageable) {
         return new CurrentTaughtResponse(courseRepository.getTotalCurrentTaught(teacherId),courseRepository.getCurrentTaught(teacherId, pageable));
+    }
+
+    @Override
+    public ListStudentInCourseResponse getListStuInCourse( int teacherId, String keySearch, Pageable pageable) {
+        int total = courseRepository.getTotalListStuInCourse(keySearch,teacherId);
+        List<ListStudentInCourseHandle> list = courseRepository.getListStuInCourse(keySearch,teacherId,pageable);
+        return new ListStudentInCourseResponse(total,list);
     }
 }

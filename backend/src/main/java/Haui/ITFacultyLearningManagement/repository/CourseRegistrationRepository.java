@@ -1,6 +1,7 @@
 package Haui.ITFacultyLearningManagement.repository;
 
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.RegisteredCourseHandle;
+import Haui.ITFacultyLearningManagement.custom.result.handle.ResultHandle;
 import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -49,4 +50,12 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
             select *  from tb_course_registration where course_id=:courseId
             """,nativeQuery = true)
     Optional<CourseRegistration> findByCourseId(@Param("courseId") int courseId);
+
+    @Query(value = """
+            select c.course_name as courseName, r.point
+            from tb_course c
+            inner join tb_course_registration r on c.course_id = r.course_id
+            where r.student_id = :studentId
+            """,nativeQuery = true)
+    List<ResultHandle> getResult(@Param("studentId") int studentId);
 }

@@ -2,6 +2,7 @@ package Haui.ITFacultyLearningManagement.repository;
 
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.course.handle.CurrentTaughtHandle;
+import Haui.ITFacultyLearningManagement.custom.course.handle.ListStudentInCourseHandle;
 import Haui.ITFacultyLearningManagement.entities.Course;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -48,4 +49,25 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
             from tb_course where teacher_id = :teacherId
             """, nativeQuery = true)
     int getTotalCurrentTaught(@Param("teacherId") int teacherId);
+
+    @Query(value = """
+            select i.full_name as fullName, s.student_id as studentId, c.point , i.phone_number as phoneNumber
+            from tb_course c
+            inner join tb_student s on c.student_id = s.student_id
+            inner join tb_info i on s.info_id = i.info_id
+            where unaccent(i.full_name) ILIKE  %:keySearch% and c.teacher_id = :teacherId
+            """,nativeQuery = true)
+    List<ListStudentInCourseHandle> getListStuInCourse(@Param("keySearch") String keySearch,
+                                                       @Param("teacherId") int teacherId,
+                                                       Pageable pageable);
+
+    @Query(value = """
+            select count(c.student_id)
+            from tb_course c
+            inner join tb_student s on c.student_id = s.student_id
+            inner join tb_info i on s.info_id = i.info_id
+            where unaccent(i.full_name) ILIKE  %:keySearch% and c.teacher_id = :teacherId
+            """,nativeQuery = true)
+    int getTotalListStuInCourse(@Param("keySearch") String keySearch,
+                                @Param("teacherId") int teacherId);
 }
