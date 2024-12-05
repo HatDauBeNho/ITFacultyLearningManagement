@@ -29,15 +29,17 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
     Optional<CourseRegistration> findByStudentIdAndCourseId(int courseId,int studentId);
 
     @Query(value = """
-            select c.course_name as "courseName", c.current_student as "currentStudent", c.maximum_student as "maximumStudent",
-            i.full_name as "fullName",c.start_time as "startTime",c.end_time as "endTime", r.create_time as "createTime"
+            select c.course_name as "courseName", cr.current_student as "currentStudent", cr.maximum_student as "maximumStudent",
+            i.full_name as "fullName",s.start_time as "startTime",s.end_time as "endTime", cr.create_time as "createTime"
             from tb_course c
-            inner join tb_course_registration r on c.course_id = r.course_id
-            inner join tb_teacher t on c.teacher_id = t.teacher_id
-            inner join tb_info i on t.info_id = i.info_id
+            left join tb_classroom cr on c.course_id = cr.course_id
+            left join tb_course_registration r on cr.class_id= r.class_id
+            left join tb_semester s on s.semester_id = cr.semester_id
+            left join tb_teacher t on cr.teacher_id = t.teacher_id
+            left join tb_info i on t.info_id = i.info_id
             where r.student_id = :studentId
             """, nativeQuery = true)
-    List<RegisteredCourseHandle> getAllCourseRegistration(@Param("studentId") int studentId, Pageable pageable);
+    List<RegisteredCourseHandle> getRegisteredCourse(@Param("studentId") int studentId);
 
     @Query(value = """
             select count(c.course_name)

@@ -119,22 +119,15 @@ public class CourseController {
         }
     }
 
-    //chua test
     @GetMapping("registeredCourse")
-    public ResponseEntity<?> searchRegisteredCourse(@RequestBody RegisteredCourseRequest request){
+    public ResponseEntity<?> registeredCourse(){
         try {
-            Pageable pageable;
-            if (request.getOption().getOrder().equals("asc")) {
-                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("create_time").ascending());
-            } else {
-                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("create_time").descending());
-            }
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    courseService.getCourseRegistration(userDetails.getId(),pageable),
+                    courseService.getRegisteredCourse(userDetails.getId()),
                     "Success get list registered course"));
         }catch (Exception e){
             e.printStackTrace();

@@ -11,6 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisteredCourseResponse {
-    private int total;
     private List<RegisteredCourseHandle> data;
 }

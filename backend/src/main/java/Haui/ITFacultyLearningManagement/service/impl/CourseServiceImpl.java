@@ -130,10 +130,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public RegisteredCourseResponse getCourseRegistration(int studentId,Pageable pageable) {
-        int total = courseRegistrationRepository.getTotal(studentId);
-        List<RegisteredCourseHandle> data = courseRegistrationRepository.getAllCourseRegistration(studentId,pageable);
-        return new RegisteredCourseResponse(total,data);
+    public List<RegisteredCourseHandle> getRegisteredCourse(int studentId){
+        return courseRegistrationRepository.getRegisteredCourse(studentId);
     }
 
     @Override
