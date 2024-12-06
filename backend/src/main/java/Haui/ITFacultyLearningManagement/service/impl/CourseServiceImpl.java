@@ -9,12 +9,8 @@ import Haui.ITFacultyLearningManagement.custom.course.response.CurrentTaughtResp
 import Haui.ITFacultyLearningManagement.custom.course.response.ListStudentInCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.RegisteredCourseHandle;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.response.RegisteredCourseResponse;
-import Haui.ITFacultyLearningManagement.entities.Classroom;
-import Haui.ITFacultyLearningManagement.entities.Course;
-import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
-import Haui.ITFacultyLearningManagement.repository.ClassroomRepository;
-import Haui.ITFacultyLearningManagement.repository.CourseRegistrationRepository;
-import Haui.ITFacultyLearningManagement.repository.CourseRepository;
+import Haui.ITFacultyLearningManagement.entities.*;
+import Haui.ITFacultyLearningManagement.repository.*;
 import Haui.ITFacultyLearningManagement.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +31,12 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired
     private ClassroomRepository classroomRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private SemesterRepository semesterRepository;
 
     @Autowired
     private CourseRegistrationRepository courseRegistrationRepository;
@@ -111,7 +114,13 @@ public class CourseServiceImpl implements CourseService {
 
 
     @Override
-    public boolean registerCourse(int classId,int studentId) {
+    public boolean registerCourse(int classId,int accountId) {
+        Optional<Student> studentOptional = studentRepository.findByAccountId(accountId);
+        if (studentOptional.isEmpty())
+            return false;
+
+        int studentId = studentOptional.get().getStudentId();
+
         Optional<Classroom> classroomOptional = classroomRepository.findById(classId);
         if (classroomOptional.isEmpty())
             return false;
@@ -119,7 +128,23 @@ public class CourseServiceImpl implements CourseService {
         Optional<CourseRegistration> courseRegistrationOptional = courseRegistrationRepository.findByStuAndClass(studentId,classId);
         if (courseRegistrationOptional.isPresent())
             return false;
+
         Classroom classroom = classroomOptional.get();
+
+        Double highestPoint = courseRegistrationRepository.getHighestPoint(classroom.getCourseId(),studentId);
+        if (highestPoint == null || highestPoint < 4)
+            return false;
+
+        if (! (classroom.getCurrentStudent() < classroom.getMaximumStudent()) )
+            return false;
+
+        Optional<Semester> semesterOptional = semesterRepository.findById(classroom.getSemesterId());
+        if (semesterOptional.isEmpty())
+            return false;
+
+        if (!LocalDate.now().isAfter(semesterOptional.get().getStartTime()) && LocalDate.now().isBefore(semesterOptional.get().getStartTime().minusWeeks(2)))
+            return false;
+
         classroom.setCurrentStudent(classroom.getCurrentStudent() + 1);
         classroom.setUpdateTime(LocalDateTime.now());
         classroomRepository.save(classroom);
@@ -165,7 +190,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public ListStudentInCourseResponse getListStuInCourse( int teacherId, String keySearch, Pageable pageable) {
+    public ListStudentInCourseResponse getListStuInCourse(int courseId, int teacherId, String keySearch, Pageable pageable) {
         int total = courseRepository.getTotalListStuInCourse(keySearch,teacherId);
         List<ListStudentInCourseHandle> list = courseRepository.getListStuInCourse(keySearch,teacherId,pageable);
         return new ListStudentInCourseResponse(total,list);

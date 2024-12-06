@@ -33,4 +33,9 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
             """,nativeQuery = true)
     double getGpa(@Param("studentId") int studentId);
 
+    @Query(value = """
+            select * from tb_student where account_id = :accountId
+            """,nativeQuery = true)
+    Optional<Student> findByAccountId(@Param("accountId") int accountId);
+
 }

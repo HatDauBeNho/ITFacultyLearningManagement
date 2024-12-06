@@ -52,9 +52,14 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
     Integer getTotal(@Param("studentId") int studentId);
 
     @Query(value = """
-            select *  from tb_course_registration where course_id=:courseId
+            select cr.point
+            from tb_course_registration cr
+            inner join tb_classroom c on cr.class_id = c.class_id
+            inner join tb_student s on s.student_id = cr.student_id
+            where c.course_id=:courseId and s.student_id = :studentId order by point desc limit 1
             """,nativeQuery = true)
-    Optional<CourseRegistration> findByCourseId(@Param("courseId") int courseId);
+    Double getHighestPoint(@Param("courseId") int courseId,
+                           @Param("studentId") int studentId);
 
     @Query(value = """
             select c.course_name as courseName, r.point

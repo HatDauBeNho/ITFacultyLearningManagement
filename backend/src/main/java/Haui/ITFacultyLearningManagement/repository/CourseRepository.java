@@ -51,18 +51,22 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
     @Query(value = """
             select i.full_name as fullName, s.student_id as studentId, c.point , i.phone_number as phoneNumber
             from tb_course c
-            inner join tb_student s on c.student_id = s.student_id
-            inner join tb_info i on s.info_id = i.info_id
-            where unaccent(i.full_name) ILIKE  %:keySearch% and c.teacher_id = :teacherId
+            left join tb_classroom cr on c.course_id = cr.course_id
+            left join tb_course_registration r r.class_id = cr.class_id
+            left join tb_student s on cr.student_id = s.student_id
+            left join tb_info i on s.info_id = i.info_id
+            where unaccent(i.full_name) ILIKE  %:keySearch%
             """,nativeQuery = true)
-    List<ListStudentInCourseHandle> getListStuInCourse(@Param("keySearch") String keySearch,
+    List<ListStudentInCourseHandle> getListStuInClass(@Param("keySearch") String keySearch,
                                                        @Param("teacherId") int teacherId,
                                                        Pageable pageable);
 
     @Query(value = """
-            select count(c.student_id)
+            select count(s.student_id)
             from tb_course c
-            inner join tb_student s on c.student_id = s.student_id
+            left join tb_classroom cr on c.course_id = cr.course_id
+            left join tb_course_registration r r.class_id = cr.class_id
+            inner join tb_student s on cr.student_id = s.student_id
             inner join tb_info i on s.info_id = i.info_id
             where unaccent(i.full_name) ILIKE  %:keySearch% and c.teacher_id = :teacherId
             """,nativeQuery = true)

@@ -33,6 +33,7 @@ public class CourseRegistration  {
     public CourseRegistration(Integer studentId, Integer classId) {
         this.studentId = studentId;
         this.classId = classId;
+        this.point = -1;
         this.createTime = LocalDateTime.now();
         this.updateTime = LocalDateTime.now();
     }

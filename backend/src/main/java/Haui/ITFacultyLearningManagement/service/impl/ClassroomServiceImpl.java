@@ -4,14 +4,8 @@ import Haui.ITFacultyLearningManagement.custom.classroom.handle.GetClassroomHand
 import Haui.ITFacultyLearningManagement.custom.classroom.request.CreateClassroomRequest;
 import Haui.ITFacultyLearningManagement.custom.classroom.request.GetClassroomRequest;
 import Haui.ITFacultyLearningManagement.custom.classroom.response.GetClassroomResponse;
-import Haui.ITFacultyLearningManagement.entities.Classroom;
-import Haui.ITFacultyLearningManagement.entities.Course;
-import Haui.ITFacultyLearningManagement.entities.Semester;
-import Haui.ITFacultyLearningManagement.entities.Teacher;
-import Haui.ITFacultyLearningManagement.repository.ClassroomRepository;
-import Haui.ITFacultyLearningManagement.repository.CourseRepository;
-import Haui.ITFacultyLearningManagement.repository.SemesterRepository;
-import Haui.ITFacultyLearningManagement.repository.TeacherRepository;
+import Haui.ITFacultyLearningManagement.entities.*;
+import Haui.ITFacultyLearningManagement.repository.*;
 import Haui.ITFacultyLearningManagement.service.ClassroomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -61,7 +55,11 @@ public class ClassroomServiceImpl implements ClassroomService {
         if (courseOptional.isEmpty())
             return false;
 
-        Optional<Teacher> teacherOptional =teacherRepository.findById(request.getTeacherId());
+        Optional<Classroom> classroomOptional = classroomRepository.findByCourseId(request.getCourseId());
+        if (classroomOptional.isPresent())
+            return false;
+
+        Optional<Teacher> teacherOptional = teacherRepository.findById(request.getTeacherId());
         if (teacherOptional.isEmpty())
             return false;
 

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClassroomRepository extends JpaRepository<Classroom,Integer> {
@@ -48,4 +49,9 @@ public interface ClassroomRepository extends JpaRepository<Classroom,Integer> {
             where l.teacher_id = ?1 and l.status=1
             """,nativeQuery = true)
     List<CurrentTaughtHandle> getCurrentTaught(int teacherId);
+
+    @Query(value = """
+            select * from tb_classroom where course_id = :courseId limit 1
+            """, nativeQuery = true)
+    Optional<Classroom> findByCourseId(@Param("courseId") int courseId);
 }

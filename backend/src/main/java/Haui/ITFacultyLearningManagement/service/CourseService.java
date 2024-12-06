@@ -30,7 +30,7 @@ public interface CourseService extends Generate<Course> {
 
     double getGPA(Integer studentId);
 
-    boolean registerCourse(int classId,int studentId);
+    boolean registerCourse(int classId,int accountId);
 
     List<RegisteredCourseHandle> getRegisteredCourse(int studentId);
 
@@ -40,5 +40,5 @@ public interface CourseService extends Generate<Course> {
 
     List<CurrentTaughtHandle> getCurrentTaught(int teacherId);
 
-    ListStudentInCourseResponse getListStuInCourse(int teacherId,String keySearch,  Pageable pageable);
+    ListStudentInCourseResponse getListStuInCourse(int courseId,int teacherId,String keySearch,  Pageable pageable);
 }

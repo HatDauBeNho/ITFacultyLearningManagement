@@ -5,10 +5,8 @@ import Haui.ITFacultyLearningManagement.custom.course.request.*;
 import Haui.ITFacultyLearningManagement.custom.course.response.SearchCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.request.RegisteredCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
-import Haui.ITFacultyLearningManagement.entities.Classroom;
-import Haui.ITFacultyLearningManagement.entities.Course;
-import Haui.ITFacultyLearningManagement.entities.CourseRegistration;
-import Haui.ITFacultyLearningManagement.entities.Teacher;
+import Haui.ITFacultyLearningManagement.entities.*;
+import Haui.ITFacultyLearningManagement.repository.StudentRepository;
 import Haui.ITFacultyLearningManagement.security.service.UserDetailsImpl;
 import Haui.ITFacultyLearningManagement.service.ClassroomService;
 import Haui.ITFacultyLearningManagement.service.CourseService;
@@ -35,6 +33,9 @@ public class CourseController {
 
     @Autowired
     private ClassroomService classroomService;
+
+    @Autowired
+    private StudentRepository studentRepository;
 
     @Autowired
     private TeacherService teacherService;
@@ -201,8 +202,8 @@ public class CourseController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    courseService.getListStuInCourse(userDetails.getId(), request.getKeySearch(),pageable)
-                    ,"Success delete course"));
+                    courseService.getListStuInCourse(request.getCourseId(), userDetails.getId(), request.getKeySearch(),pageable)
+                    ,"Success get list student in course"));
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));
