@@ -18,4 +18,6 @@ public interface StudentService  extends  Generate<Student>{
 
     Integer getTotal(String keySearch);
 
+    Optional<Student> findByAccountId( int accountId);
+
 }

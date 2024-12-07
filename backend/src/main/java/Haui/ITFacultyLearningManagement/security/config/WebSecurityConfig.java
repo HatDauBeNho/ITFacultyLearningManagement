@@ -57,21 +57,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     }
 
     String[] adminApi = {
+            "/api/course/search",
             "/api/course/create",
             "/api/course/update",
-            "/api/student"
+            "/api/course/delete",
+            "/api/classroom/create",
+            "/api/classroom/delete",
+            "/api/student/**"
     };
 
     String[] lectureApi = {
             "/api/course/currentTaught",
+            "/api/course/getListStudent",
             "/api/result/enter"
     };
 
     String[] studentApi = {
             "/api/course/register",
             "/api/course/registeredCourse",
+            "/api/course/cancel",
             "/api/result/get",
-            "/api/course/cancel"
     };
 
     @Override
@@ -80,9 +85,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         http.exceptionHandling().authenticationEntryPoint(authEntryPointJwt());
 
         http.authorizeHttpRequests().antMatchers("/api/auth/login").permitAll()
-//                .antMatchers(adminApi).hasAuthority("1")
-//                .antMatchers(lectureApi).hasAuthority("2")
-//                .antMatchers(studentApi).hasAuthority("3")
+                .antMatchers(adminApi).hasAuthority("1")
+                .antMatchers(lectureApi).hasAnyAuthority("1","2")
+                .antMatchers(studentApi).hasAuthority("3")
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .logout();

@@ -41,8 +41,8 @@ public class CourseRegistrationServiceImpl implements CourseRegistrationService 
     }
 
     @Override
-    public List<ResultHandle> getResult(int studentId) {
-        return courseRegistrationRepository.getResult(studentId);
+    public List<ResultHandle> getResult(int studentId, int semesterId) {
+        return courseRegistrationRepository.getResultWithSemesterId(studentId,semesterId);
     }
 
     @Transactional

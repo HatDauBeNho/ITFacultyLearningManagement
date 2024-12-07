@@ -62,10 +62,15 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
                            @Param("studentId") int studentId);
 
     @Query(value = """
-            select c.course_name as courseName, r.point
-            from tb_course c
-            inner join tb_course_registration r on c.course_id = r.course_id
-            where r.student_id = :studentId
+            select c.course_name as courseName, cr.point, s.name as semesterName
+            from tb_classroom cl
+            left join tb_course_registration cr on cl.class_id = cr.class_id
+            left join tb_course c on c.course_id = cl.course_id
+            left join tb_semester s on s.semester_id = cl.semester_id
+            where cr.student_id = :studentId and s.semester_id = :semesterId
             """,nativeQuery = true)
-    List<ResultHandle> getResult(@Param("studentId") int studentId);
+    List<ResultHandle> getResultWithSemesterId(@Param("studentId") int studentId,
+                                               @Param("semesterId") int semesterId);
+
+
 }

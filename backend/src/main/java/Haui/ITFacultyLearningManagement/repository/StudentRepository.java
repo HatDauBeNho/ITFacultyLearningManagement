@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface StudentRepository extends JpaRepository<Student,Integer> {
     @Query(value = """
-            select i.full_name as fullName, i.date_of_birth as dateOfBirht, i.gender, i.address,  i.phone_number as phoneNumber, i.email, s.gpa
+            select i.full_name as fullName, i.date_of_birth as dateOfBirth, i.gender, i.address,  i.phone_number as phoneNumber, i.email, s.gpa
             from tb_student s left join tb_info i on i.info_id = s.info_id
             WHERE unaccent(i.full_name) ILIKE  %:keySearch%
             """,nativeQuery = true)

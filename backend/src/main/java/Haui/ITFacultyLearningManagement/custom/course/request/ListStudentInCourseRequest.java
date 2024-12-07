@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListStudentInCourseRequest {
-    private int courseId;
+    private int classId;
     private String keySearch;
     private OptionRequest option;
 }

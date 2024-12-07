@@ -10,6 +10,7 @@ import Haui.ITFacultyLearningManagement.repository.StudentRepository;
 import Haui.ITFacultyLearningManagement.security.service.UserDetailsImpl;
 import Haui.ITFacultyLearningManagement.service.ClassroomService;
 import Haui.ITFacultyLearningManagement.service.CourseService;
+import Haui.ITFacultyLearningManagement.service.StudentService;
 import Haui.ITFacultyLearningManagement.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +37,7 @@ public class CourseController {
     private ClassroomService classroomService;
 
     @Autowired
-    private StudentRepository studentRepository;
+    private StudentService studentService;
 
     @Autowired
     private TeacherService teacherService;
@@ -68,9 +70,11 @@ public class CourseController {
             if (courseOptional.isPresent())
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course already exits"));
 
-            Optional<Course> conditionOptional= courseService.findById(request.getCondition());
-            if (conditionOptional.isEmpty())
-                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course condition isn't exits"));
+            if (request.getCondition()!=0){
+                Optional<Course> conditionOptional = courseService.findById(request.getCondition());
+                if (conditionOptional.isEmpty())
+                    return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course condition isn't exits"));
+            }
 
             courseService.saveCourse(request);
             return ResponseEntity.ok(new CustomResponse<>(1, null, "Success create course"));
@@ -127,8 +131,13 @@ public class CourseController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
+            Optional<Student> studentOptional = studentService.findByAccountId(userDetails.getId());
+            if (studentOptional.isEmpty()){
+                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Student isn't exits"));
+            }
+
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    courseService.getRegisteredCourse(userDetails.getId()),
+                    courseService.getRegisteredCourse(studentOptional.get().getStudentId()),
                     "Success get list registered course"));
         }catch (Exception e){
             e.printStackTrace();
@@ -158,7 +167,12 @@ public class CourseController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-            if (!courseService.cancelCourse(classId, userDetails.getId())){
+            Optional<Student> studentOptional = studentService.findByAccountId(userDetails.getId());
+            if (studentOptional.isEmpty()){
+                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Student isn't exits"));
+            }
+
+            if (!courseService.cancelCourse(classId, studentOptional.get().getStudentId())){
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Can't cancel"));
             }
 
@@ -175,34 +189,32 @@ public class CourseController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
+            Optional<Teacher> teacherOptional = teacherService.findByAccountId(userDetails.getId());
+            if (teacherOptional.isEmpty()){
+                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Teacher isn't exits"));
+            }
+
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    courseService.getCurrentTaught(userDetails.getId())
+                    courseService.getCurrentTaught(teacherOptional.get().getTeacherId())
                     ,"Success get list current taught"));
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));
         }
     }
-    //chua test
+
     @GetMapping("/getListStudent")
     public ResponseEntity<?> getListStudentInCourse(@RequestBody ListStudentInCourseRequest request) {
         try{
-            Optional<Course> courseOptional = courseService.findById(request.getCourseId());
-            if (courseOptional.isEmpty())
-                return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Course isn't exits"));
-
             Pageable pageable;
             if (request.getOption().getOrder().equals("asc")) {
-                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("full_name").ascending());
+                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("i.full_name").ascending());
             } else {
-                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("full_name").descending());
+                pageable = PageRequest.of(request.getOption().getOffset() - 1, request.getOption().getLimit(), JpaSort.unsafe("i.full_name").descending());
             }
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    courseService.getListStuInCourse(request.getCourseId(), userDetails.getId(), request.getKeySearch(),pageable)
+                    courseService.getListStuInCourse(request.getClassId(), request.getKeySearch(),pageable)
                     ,"Success get list student in course"));
         }catch (Exception e){
             e.printStackTrace();

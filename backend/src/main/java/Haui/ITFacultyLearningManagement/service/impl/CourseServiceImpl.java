@@ -132,7 +132,7 @@ public class CourseServiceImpl implements CourseService {
         Classroom classroom = classroomOptional.get();
 
         Double highestPoint = courseRegistrationRepository.getHighestPoint(classroom.getCourseId(),studentId);
-        if (highestPoint == null || highestPoint < 4)
+        if (highestPoint!=null && highestPoint < 4)
             return false;
 
         if (! (classroom.getCurrentStudent() < classroom.getMaximumStudent()) )
@@ -142,7 +142,8 @@ public class CourseServiceImpl implements CourseService {
         if (semesterOptional.isEmpty())
             return false;
 
-        if (!LocalDate.now().isAfter(semesterOptional.get().getStartTime()) && LocalDate.now().isBefore(semesterOptional.get().getStartTime().minusWeeks(2)))
+        if (!LocalDate.now().isAfter(semesterOptional.get().getStartTime()) &&
+                LocalDate.now().isBefore(semesterOptional.get().getStartTime().minusMonths(1)))
             return false;
 
         classroom.setCurrentStudent(classroom.getCurrentStudent() + 1);
@@ -190,9 +191,9 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public ListStudentInCourseResponse getListStuInCourse(int courseId, int teacherId, String keySearch, Pageable pageable) {
-        int total = courseRepository.getTotalListStuInCourse(keySearch,teacherId);
-        List<ListStudentInCourseHandle> list = courseRepository.getListStuInCourse(keySearch,teacherId,pageable);
+    public ListStudentInCourseResponse getListStuInCourse(int classId, String keySearch, Pageable pageable) {
+        int total = courseRepository.getTotalListStuInCourse(classId,keySearch);
+        List<ListStudentInCourseHandle> list = courseRepository.getListStuInClass(classId,keySearch,pageable);
         return new ListStudentInCourseResponse(total,list);
     }
 }

@@ -49,27 +49,25 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
     int getTotalCurrentTaught(@Param("teacherId") int teacherId);
 
     @Query(value = """
-            select i.full_name as fullName, s.student_id as studentId, c.point , i.phone_number as phoneNumber
-            from tb_course c
-            left join tb_classroom cr on c.course_id = cr.course_id
-            left join tb_course_registration r r.class_id = cr.class_id
+            select i.full_name as fullName, s.student_id as studentId, cr.point , i.phone_number as phoneNumber
+            from tb_classroom cl
+            left join tb_course_registration cr on cl.class_id = cr.class_id
             left join tb_student s on cr.student_id = s.student_id
-            left join tb_info i on s.info_id = i.info_id
-            where unaccent(i.full_name) ILIKE  %:keySearch%
+            left join tb_info i on i.info_id = s.info_id
+            where unaccent(i.full_name) ILIKE  %:keySearch% and cl.class_id = :classId
             """,nativeQuery = true)
-    List<ListStudentInCourseHandle> getListStuInClass(@Param("keySearch") String keySearch,
-                                                       @Param("teacherId") int teacherId,
-                                                       Pageable pageable);
+    List<ListStudentInCourseHandle> getListStuInClass(@Param("classId") int classId,
+                                                      @Param("keySearch") String keySearch,
+                                                      Pageable pageable);
 
     @Query(value = """
             select count(s.student_id)
-            from tb_course c
-            left join tb_classroom cr on c.course_id = cr.course_id
-            left join tb_course_registration r r.class_id = cr.class_id
-            inner join tb_student s on cr.student_id = s.student_id
-            inner join tb_info i on s.info_id = i.info_id
-            where unaccent(i.full_name) ILIKE  %:keySearch% and c.teacher_id = :teacherId
+            from tb_classroom cl
+            left join tb_course_registration cr on cl.class_id = cr.class_id
+            left join tb_student s on cr.student_id = s.student_id
+            left join tb_info i on i.info_id = s.info_id
+            where unaccent(i.full_name) ILIKE  %:keySearch% and cl.class_id = :classId
             """,nativeQuery = true)
-    int getTotalListStuInCourse(@Param("keySearch") String keySearch,
-                                @Param("teacherId") int teacherId);
+    int getTotalListStuInCourse(@Param("classId") int classId,
+                                @Param("keySearch") String keySearch);
 }

@@ -40,5 +40,6 @@ public interface CourseService extends Generate<Course> {
 
     List<CurrentTaughtHandle> getCurrentTaught(int teacherId);
 
-    ListStudentInCourseResponse getListStuInCourse(int courseId,int teacherId,String keySearch,  Pageable pageable);
+   ListStudentInCourseResponse getListStuInCourse(int classId, String keySearch, Pageable pageable);
+
 }

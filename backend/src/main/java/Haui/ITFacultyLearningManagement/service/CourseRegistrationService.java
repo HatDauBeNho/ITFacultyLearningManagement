@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CourseRegistrationService extends Generate<CourseRegistration> {
-    List<ResultHandle> getResult( int studentId);
+    List<ResultHandle> getResult( int studentId, int semesterId);
 
     boolean enterResult(EnterResultRequest request);
 }

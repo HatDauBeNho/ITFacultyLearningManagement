@@ -44,4 +44,9 @@ public class TeacherServiceImpl implements TeacherService {
     public Optional<Teacher> findByName(String name) {
         return teacherRepository.findByName(name);
     }
+
+    @Override
+    public Optional<Teacher> findByAccountId(int accountId) {
+        return teacherRepository.findByAccountId(accountId);
+    }
 }
