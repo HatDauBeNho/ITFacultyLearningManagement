@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class DashboardForStudentResponse {
     private double gpa;
     private int countRegisteredCourse;
+    private String semesterName;
 }

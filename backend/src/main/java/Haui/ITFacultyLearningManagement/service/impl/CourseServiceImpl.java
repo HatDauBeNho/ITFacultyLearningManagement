@@ -1,20 +1,16 @@
 package Haui.ITFacultyLearningManagement.service.impl;
 
 import Haui.ITFacultyLearningManagement.custom.course.handle.CurrentTaughtHandle;
-import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
 import Haui.ITFacultyLearningManagement.custom.subject.handle.ListSubjectHandle;
-import Haui.ITFacultyLearningManagement.custom.course.handle.ListStudentInCourseHandle;
+import Haui.ITFacultyLearningManagement.custom.course.handle.ListStudentInClassHandle;
 import Haui.ITFacultyLearningManagement.custom.course.request.CreateCourseRequest;
-import Haui.ITFacultyLearningManagement.custom.course.response.CurrentTaughtResponse;
 import Haui.ITFacultyLearningManagement.custom.course.response.ListStudentInCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.courseRegistration.handle.RegisteredCourseHandle;
-import Haui.ITFacultyLearningManagement.custom.courseRegistration.response.RegisteredCourseResponse;
 import Haui.ITFacultyLearningManagement.entities.*;
 import Haui.ITFacultyLearningManagement.repository.*;
 import Haui.ITFacultyLearningManagement.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -193,7 +189,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public ListStudentInCourseResponse getListStuInCourse(int classId, String keySearch, Pageable pageable) {
         int total = courseRepository.getTotalListStuInCourse(classId,keySearch);
-        List<ListStudentInCourseHandle> list = courseRepository.getListStuInClass(classId,keySearch,pageable);
+        List<ListStudentInClassHandle> list = courseRepository.getListStuInClass(classId,keySearch,pageable);
         return new ListStudentInCourseResponse(total,list);
     }
 }

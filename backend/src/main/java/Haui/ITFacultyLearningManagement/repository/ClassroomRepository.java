@@ -54,4 +54,5 @@ public interface ClassroomRepository extends JpaRepository<Classroom,Integer> {
             select * from tb_classroom where course_id = :courseId limit 1
             """, nativeQuery = true)
     Optional<Classroom> findByCourseId(@Param("courseId") int courseId);
+
 }

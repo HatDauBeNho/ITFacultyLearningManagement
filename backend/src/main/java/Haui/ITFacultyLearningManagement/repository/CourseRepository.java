@@ -2,7 +2,7 @@ package Haui.ITFacultyLearningManagement.repository;
 
 import Haui.ITFacultyLearningManagement.custom.subject.handle.ListSubjectHandle;
 import Haui.ITFacultyLearningManagement.custom.course.handle.CurrentTaughtHandle;
-import Haui.ITFacultyLearningManagement.custom.course.handle.ListStudentInCourseHandle;
+import Haui.ITFacultyLearningManagement.custom.course.handle.ListStudentInClassHandle;
 import Haui.ITFacultyLearningManagement.entities.Course;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -56,9 +56,9 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
             left join tb_info i on i.info_id = s.info_id
             where unaccent(i.full_name) ILIKE  %:keySearch% and cl.class_id = :classId
             """,nativeQuery = true)
-    List<ListStudentInCourseHandle> getListStuInClass(@Param("classId") int classId,
-                                                      @Param("keySearch") String keySearch,
-                                                      Pageable pageable);
+    List<ListStudentInClassHandle> getListStuInClass(@Param("classId") int classId,
+                                                     @Param("keySearch") String keySearch,
+                                                     Pageable pageable);
 
     @Query(value = """
             select count(s.student_id)

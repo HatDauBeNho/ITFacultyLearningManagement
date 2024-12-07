@@ -16,8 +16,8 @@ public class Evaluate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "evaluate_id")
     private Integer evaluateId;
-    @Column(name = "teacher_id")
-    private Integer teacherId;
+    @Column(name = "class_id")
+    private Integer classId;
     @Column(name = "student_id")
     private Integer studentId;
     @Column(name = "content")
@@ -28,4 +28,13 @@ public class Evaluate {
     private LocalDateTime createTime;
     @Column(name = "update_time")
     private LocalDateTime updateTime;
+
+    public Evaluate(Integer classId, Integer studentId, String content, double rating) {
+        this.classId= classId;
+        this.studentId = studentId;
+        this.content = content;
+        this.rating = rating;
+        this.updateTime =  LocalDateTime.now();
+        this.createTime = LocalDateTime.now();
+    }
 }

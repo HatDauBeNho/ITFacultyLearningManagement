@@ -25,7 +25,6 @@ public class ResultController {
     @Autowired
     private StudentService studentService;
 
-    //chua test
     @GetMapping("/get")
     public ResponseEntity<?> getResult(@RequestParam("semesterId") int semesterId){
         try{

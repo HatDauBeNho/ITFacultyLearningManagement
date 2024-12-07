@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudentService  extends  Generate<Student>{
-
     List<SearchStudentHandle> getStudentWithSearch(String keySearch, Pageable pageable);
 
     Integer getTotal(String keySearch);
 
     Optional<Student> findByAccountId( int accountId);
+
 
 }
