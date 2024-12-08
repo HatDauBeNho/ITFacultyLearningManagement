@@ -1,6 +1,6 @@
 package Haui.ITFacultyLearningManagement.repository;
 
-import Haui.ITFacultyLearningManagement.custom.classroom.handle.GetClassroomHandle;
+import Haui.ITFacultyLearningManagement.custom.classroom.handle.GetClassHandle;
 import Haui.ITFacultyLearningManagement.custom.course.handle.CurrentTaughtHandle;
 import Haui.ITFacultyLearningManagement.entities.Classroom;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +24,9 @@ public interface ClassroomRepository extends JpaRepository<Classroom,Integer> {
             inner join tb_info i on i.info_id = t.info_id
             WHERE unaccent(c.course_name) ILIKE  %:keySearch% and l.status = 1 and s.semester_id = :semesterId
             """,nativeQuery = true)
-    List<GetClassroomHandle> getClassBySearchAndSemester(@Param("keySearch") String keySearch,
-                                                         @Param("semesterId") int semesterId,
-                                                         Pageable pageable);
+    List<GetClassHandle> getClassBySearchAndSemester(@Param("keySearch") String keySearch,
+                                                     @Param("semesterId") int semesterId,
+                                                     Pageable pageable);
 
     @Query(value = """
             select count(c.course_name)

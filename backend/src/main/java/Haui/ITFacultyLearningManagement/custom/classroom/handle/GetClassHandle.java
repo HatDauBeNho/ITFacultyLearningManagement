@@ -2,7 +2,7 @@ package Haui.ITFacultyLearningManagement.custom.classroom.handle;
 
 import java.time.LocalDate;
 
-public interface GetClassroomHandle {
+public interface GetClassHandle {
     String getCourseName();
     int getCurrentStudent();
     int getMaximumStudent();

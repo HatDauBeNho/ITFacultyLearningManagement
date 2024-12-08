@@ -1,6 +1,6 @@
 package Haui.ITFacultyLearningManagement.service.impl;
 
-import Haui.ITFacultyLearningManagement.custom.classroom.handle.GetClassroomHandle;
+import Haui.ITFacultyLearningManagement.custom.classroom.handle.GetClassHandle;
 import Haui.ITFacultyLearningManagement.custom.classroom.request.CreateClassroomRequest;
 import Haui.ITFacultyLearningManagement.custom.classroom.request.GetClassroomRequest;
 import Haui.ITFacultyLearningManagement.custom.classroom.response.GetClassroomResponse;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,7 +78,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     public GetClassroomResponse getClassBySearchAndSemester(GetClassroomRequest request, Pageable pageable) {
         int total = classroomRepository.getTotalBySearchAndSemester(request.getKeySearch(), request.getSemesterId());
 
-        List<GetClassroomHandle> list = classroomRepository.getClassBySearchAndSemester(request.getKeySearch(), request.getSemesterId(),pageable);
+        List<GetClassHandle> list = classroomRepository.getClassBySearchAndSemester(request.getKeySearch(), request.getSemesterId(),pageable);
         return new GetClassroomResponse(total,list);
     }
 }

@@ -2,12 +2,9 @@ package Haui.ITFacultyLearningManagement.controller;
 
 import Haui.ITFacultyLearningManagement.custom.classroom.request.CreateClassroomRequest;
 import Haui.ITFacultyLearningManagement.custom.classroom.request.GetClassroomRequest;
-import Haui.ITFacultyLearningManagement.custom.course.response.SearchCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
 import Haui.ITFacultyLearningManagement.entities.Classroom;
 import Haui.ITFacultyLearningManagement.service.ClassroomService;
-import Haui.ITFacultyLearningManagement.service.CourseService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

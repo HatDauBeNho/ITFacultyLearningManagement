@@ -63,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             "/api/course/delete",
             "/api/classroom/create",
             "/api/classroom/delete",
+            "/api/classroom/search",
             "/api/student/**"
     };
 
@@ -77,6 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             "/api/course/registeredCourse",
             "/api/course/cancel",
             "/api/result/get",
+            "/api/classroom/search"
     };
 
     @Override

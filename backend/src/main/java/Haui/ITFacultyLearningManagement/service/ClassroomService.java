@@ -10,4 +10,6 @@ public interface ClassroomService extends Generate<Classroom> {
     boolean createClassroom(CreateClassroomRequest request);
 
     GetClassroomResponse getClassBySearchAndSemester(GetClassroomRequest request, Pageable pageable);
+
+
 }

@@ -1,7 +1,7 @@
 package Haui.ITFacultyLearningManagement.repository;
 
+import Haui.ITFacultyLearningManagement.custom.classroom.handle.GetClassHandle;
 import Haui.ITFacultyLearningManagement.custom.subject.handle.ListSubjectHandle;
-import Haui.ITFacultyLearningManagement.custom.course.handle.CurrentTaughtHandle;
 import Haui.ITFacultyLearningManagement.custom.course.handle.ListStudentInClassHandle;
 import Haui.ITFacultyLearningManagement.entities.Course;
 import org.springframework.data.domain.Pageable;
@@ -36,19 +36,6 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
     Optional<Course> findByCourseName(String courseName);
 
     @Query(value = """
-            select course_id as courseId, course_name as courseName, current_student as currentStudent,
-                start_time as startTime, end_time as endTime
-            from tb_course where teacher_id = :teacherId
-            """,nativeQuery = true)
-    List<CurrentTaughtHandle> getCurrentTaught(@Param("teacherId") int teacherId, Pageable pageable);
-
-    @Query(value = """
-            select count(course_id)
-            from tb_course where teacher_id = :teacherId
-            """, nativeQuery = true)
-    int getTotalCurrentTaught(@Param("teacherId") int teacherId);
-
-    @Query(value = """
             select i.full_name as fullName, s.student_id as studentId, cr.point , i.phone_number as phoneNumber
             from tb_classroom cl
             left join tb_course_registration cr on cl.class_id = cr.class_id
@@ -70,4 +57,15 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
             """,nativeQuery = true)
     int getTotalListStuInCourse(@Param("classId") int classId,
                                 @Param("keySearch") String keySearch);
+
+    @Query(value = """
+            select c.course_name as courseName, cl.current_student as currenStudent , cl.maximum_student as maximumStudent, i.full_name as teacherName
+                cl.start_time as startTime, cl.end_time
+            from tb_classroom cl
+            left join tb_course c on cl.course_id = c.course_id
+            left join tb_teacher t on t.teacher_id = cl.teacher_id
+            left join tb_info i on i.info_id = t.info id
+            WHERE NOW() BETWEEN cl.start_time - INTERVAL '1 month' AND cl.start_time;
+            """,nativeQuery = true)
+    Optional<GetClassHandle> getClassAvailable();
 }

@@ -1,6 +1,6 @@
 package Haui.ITFacultyLearningManagement.custom.classroom.response;
 
-import Haui.ITFacultyLearningManagement.custom.classroom.handle.GetClassroomHandle;
+import Haui.ITFacultyLearningManagement.custom.classroom.handle.GetClassHandle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,5 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class GetClassroomResponse {
     private int total;
-    private List<GetClassroomHandle> data;
+    private List<GetClassHandle> data;
 }
