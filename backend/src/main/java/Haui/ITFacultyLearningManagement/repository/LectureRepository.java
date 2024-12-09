@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture,Integer> {
     @Query(value = """
-            SELECT * FROM tb_teachers t
+            SELECT * FROM tb_lecture t
             LEFT OUTER JOIN tb_info i on t.infoId = i.infoId
             WHERE  full_name= ?1 LIMIT 1
             """, nativeQuery = true)
@@ -25,4 +25,9 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
             select * from tb_lecture where account_id =:accountId limit 1
             """,nativeQuery = true)
     Optional<Lecture> findByAccountId(@Param("accountId") int accountId);
+
+    @Query(value = """
+            select count(lecture_id) from tb_lecture
+            """,nativeQuery = true)
+    int countLecture();
 }

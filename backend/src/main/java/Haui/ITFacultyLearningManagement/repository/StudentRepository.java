@@ -38,4 +38,8 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
             """,nativeQuery = true)
     Optional<Student> findByAccountId(@Param("accountId") int accountId);
 
+    @Query(value = """
+            select count(student_id) from tb_student
+            """,nativeQuery = true)
+    int countStudent();
 }

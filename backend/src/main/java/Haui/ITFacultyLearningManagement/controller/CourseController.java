@@ -199,7 +199,7 @@ public class CourseController {
         }
     }
 
-    @GetMapping("/getListStudent")
+    @PostMapping("/getListStudent")
     public ResponseEntity<?> getListStudentInCourse(@RequestBody ListStudentInCourseRequest request) {
         try{
             Pageable pageable;

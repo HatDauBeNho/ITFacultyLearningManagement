@@ -64,13 +64,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             "/api/classroom/create",
             "/api/classroom/delete",
             "/api/classroom/search",
+            "/api/dashboard/admin",
             "/api/student/**"
     };
 
     String[] lectureApi = {
             "/api/course/currentTaught",
             "/api/course/getListStudent",
-            "/api/result/enter"
+            "/api/result/enter",
+            "/api/dashboard/lecture"
     };
 
     String[] studentApi = {
@@ -78,7 +80,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             "/api/course/registeredCourse",
             "/api/course/cancel",
             "/api/result/get",
-            "/api/classroom/search"
+            "/api/classroom/search",
+            "/api/dashboard/student"
     };
 
     @Override

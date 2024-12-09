@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DashboardForAdminResponse {
-    private long countDepartment;
-    private long countMajor;
-    private long countTeacher;
-    private long countStudent;
-    private long countSubject;
+public class DashboardAdminResponse {
+    private int countLecture;
+    private int countStudent;
 }

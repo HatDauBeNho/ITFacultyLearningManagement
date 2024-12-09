@@ -43,7 +43,7 @@ public class DashboardController {
             }
 
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    dashboardService.getDashboardForStudent(studentOptional.get().getStudentId()),
+                    dashboardService.getDashboardStudent(studentOptional.get().getStudentId()),
                     "Success get dashboard"));
         }catch (Exception e){
             e.printStackTrace();
@@ -63,8 +63,20 @@ public class DashboardController {
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Lecture isn't exits"));
 
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    dashboardService.getDashboardForLecture(lectureOptional.get().getLectureId()),
+                    dashboardService.getDashboardLecture(lectureOptional.get().getLectureId()),
                     "Success get dashboard for lecture"));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));
+        }
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<?> getDashboardAdmin(){
+        try{
+            return ResponseEntity.ok(new CustomResponse<>(1,
+                    dashboardService.getDashboardAdmin(),
+                    "Success get dashboard for admin"));
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, e.getMessage()));

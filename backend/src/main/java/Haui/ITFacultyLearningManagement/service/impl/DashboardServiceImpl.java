@@ -2,10 +2,8 @@ package Haui.ITFacultyLearningManagement.service.impl;
 
 import Haui.ITFacultyLearningManagement.custom.dashboard.handle.DashboardLectureHandle;
 import Haui.ITFacultyLearningManagement.custom.dashboard.handle.DashboardStudentHandle;
-import Haui.ITFacultyLearningManagement.repository.CourseRegistrationRepository;
-import Haui.ITFacultyLearningManagement.repository.CourseRepository;
-import Haui.ITFacultyLearningManagement.repository.SemesterRepository;
-import Haui.ITFacultyLearningManagement.repository.StudentRepository;
+import Haui.ITFacultyLearningManagement.custom.dashboard.response.DashboardAdminResponse;
+import Haui.ITFacultyLearningManagement.repository.*;
 import Haui.ITFacultyLearningManagement.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,18 +17,28 @@ public class DashboardServiceImpl implements DashboardService {
     private CourseRepository courseRepository;
 
     @Autowired
+    private LectureRepository lectureRepository;
+
+    @Autowired
     private CourseRegistrationRepository courseRegistrationRepository;
 
     @Autowired
     private SemesterRepository semesterRepository;
 
     @Override
-    public DashboardStudentHandle getDashboardForStudent(int studentId) {
+    public DashboardStudentHandle getDashboardStudent(int studentId) {
         return semesterRepository.getDashboardStudent(studentId);
     }
 
     @Override
-    public DashboardLectureHandle getDashboardForLecture(int lectureId) {
+    public DashboardLectureHandle getDashboardLecture(int lectureId) {
         return semesterRepository.getDashboardLecture(lectureId);
+    }
+
+    @Override
+    public DashboardAdminResponse getDashboardAdmin() {
+        int countStudent= studentRepository.countStudent();
+        int countLecture = lectureRepository.countLecture();
+        return new DashboardAdminResponse(countLecture,countStudent);
     }
 }

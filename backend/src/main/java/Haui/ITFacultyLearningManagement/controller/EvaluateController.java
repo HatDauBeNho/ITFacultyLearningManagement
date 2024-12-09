@@ -16,7 +16,6 @@ public class EvaluateController {
     @Autowired
     private EvaluateService evaluateService;
 
-    //chua test
     @PostMapping("")
     public ResponseEntity<?> evaluateLecture(@RequestBody EvaluateRequest request){
         try{

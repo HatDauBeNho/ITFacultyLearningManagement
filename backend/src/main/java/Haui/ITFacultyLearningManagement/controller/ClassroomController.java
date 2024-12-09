@@ -54,7 +54,7 @@ public class ClassroomController {
         }
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<?> getClassroomBySearch(@RequestBody GetClassroomRequest request){
         try{
             Pageable pageable;
