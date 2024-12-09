@@ -182,8 +182,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CurrentTaughtHandle> getCurrentTaught(int teacherId) {
-        return classroomRepository.getCurrentTaught(teacherId);
+    public List<CurrentTaughtHandle> getCurrentTaught(int lectureId) {
+        return classroomRepository.getCurrentTaught(lectureId);
     }
 
     @Override

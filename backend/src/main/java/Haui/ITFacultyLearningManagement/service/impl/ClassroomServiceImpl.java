@@ -20,7 +20,7 @@ public class ClassroomServiceImpl implements ClassroomService {
     private ClassroomRepository classroomRepository;
 
     @Autowired
-    private TeacherRepository teacherRepository;
+    private LectureRepository lectureRepository;
 
     @Autowired
     private CourseRepository courseRepository;
@@ -58,7 +58,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         if (classroomOptional.isPresent())
             return false;
 
-        Optional<Teacher> teacherOptional = teacherRepository.findById(request.getTeacherId());
+        Optional<Lecture> teacherOptional = lectureRepository.findById(request.getLectureId());
         if (teacherOptional.isEmpty())
             return false;
 
@@ -69,7 +69,7 @@ public class ClassroomServiceImpl implements ClassroomService {
         if (request.getMaximumStudent() > 60)
             return false;
 
-        Classroom classroom = new Classroom(request.getMaximumStudent(), request.getTeacherId(), request.getCourseId(), request.getSemesterId());
+        Classroom classroom = new Classroom(request.getMaximumStudent(), request.getLectureId(), request.getCourseId(), request.getSemesterId());
         classroomRepository.save(classroom);
         return true;
     }

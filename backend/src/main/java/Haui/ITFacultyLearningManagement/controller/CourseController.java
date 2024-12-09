@@ -3,15 +3,13 @@ package Haui.ITFacultyLearningManagement.controller;
 import Haui.ITFacultyLearningManagement.custom.subject.handle.ListSubjectHandle;
 import Haui.ITFacultyLearningManagement.custom.course.request.*;
 import Haui.ITFacultyLearningManagement.custom.course.response.SearchCourseResponse;
-import Haui.ITFacultyLearningManagement.custom.courseRegistration.request.RegisteredCourseRequest;
 import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
 import Haui.ITFacultyLearningManagement.entities.*;
-import Haui.ITFacultyLearningManagement.repository.StudentRepository;
 import Haui.ITFacultyLearningManagement.security.service.UserDetailsImpl;
 import Haui.ITFacultyLearningManagement.service.ClassroomService;
 import Haui.ITFacultyLearningManagement.service.CourseService;
 import Haui.ITFacultyLearningManagement.service.StudentService;
-import Haui.ITFacultyLearningManagement.service.TeacherService;
+import Haui.ITFacultyLearningManagement.service.LectureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +36,7 @@ public class CourseController {
     private StudentService studentService;
 
     @Autowired
-    private TeacherService teacherService;
+    private LectureService lectureService;
 
     @PostMapping("/search")
     public ResponseEntity<?> getCourseWithSearch(@RequestBody SearchCourseRequest request){
@@ -189,13 +185,13 @@ public class CourseController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-            Optional<Teacher> teacherOptional = teacherService.findByAccountId(userDetails.getId());
+            Optional<Lecture> teacherOptional = lectureService.findByAccountId(userDetails.getId());
             if (teacherOptional.isEmpty()){
                 return ResponseEntity.badRequest().body(new CustomResponse<>(0, null, "Teacher isn't exits"));
             }
 
             return ResponseEntity.ok(new CustomResponse<>(1,
-                    courseService.getCurrentTaught(teacherOptional.get().getTeacherId())
+                    courseService.getCurrentTaught(teacherOptional.get().getLectureId())
                     ,"Success get list current taught"));
         }catch (Exception e){
             e.printStackTrace();

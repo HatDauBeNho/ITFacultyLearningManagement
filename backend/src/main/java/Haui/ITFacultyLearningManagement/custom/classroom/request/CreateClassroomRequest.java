@@ -11,5 +11,5 @@ public class CreateClassroomRequest {
     private int courseId;
     private int maximumStudent;
     private int semesterId;
-    private int teacherId;
+    private int lectureId;
 }

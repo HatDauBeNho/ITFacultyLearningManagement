@@ -5,7 +5,6 @@ import Haui.ITFacultyLearningManagement.custom.evaluate.request.EvaluateRequest;
 import Haui.ITFacultyLearningManagement.entities.*;
 import Haui.ITFacultyLearningManagement.repository.*;
 import Haui.ITFacultyLearningManagement.service.EvaluateService;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,7 @@ public class EvaluateServiceImpl implements EvaluateService {
     private CourseRegistrationRepository courseRegistrationRepository;
 
     @Autowired
-    private TeacherRepository teacherRepository;
+    private LectureRepository lectureRepository;
 
     @Autowired
     private ClassroomRepository classroomRepository;

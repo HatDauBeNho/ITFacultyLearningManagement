@@ -35,7 +35,7 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
             left join tb_classroom cr on c.course_id = cr.course_id
             left join tb_course_registration r on cr.class_id= r.class_id
             left join tb_semester s on s.semester_id = cr.semester_id
-            left join tb_teacher t on cr.teacher_id = t.teacher_id
+            left join tb_teacher t on cr.lecture_id = t.lecture_id
             left join tb_info i on t.info_id = i.info_id
             where r.student_id = :studentId
             """, nativeQuery = true)
@@ -45,11 +45,11 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
             select count(c.course_name)
             from tb_course c
             inner join tb_course_registration r on c.course_id = r.course_id
-            inner join tb_teacher t on c.teacher_id = t.teacher_id
+            inner join tb_teacher t on c.lecture_id = t.lecture_id
             inner join tb_info i on t.info_id = i.info_id
             where r.student_id = :studentId
             """,nativeQuery = true)
-    Integer getTotal(@Param("studentId") int studentId);
+    Integer getTotalRegisteredCourse(@Param("studentId") int studentId);
 
     @Query(value = """
             select cr.point

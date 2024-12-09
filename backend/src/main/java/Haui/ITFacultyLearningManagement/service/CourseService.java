@@ -38,7 +38,7 @@ public interface CourseService extends Generate<Course> {
 
     boolean cancelCourse(int classId, int studentId);
 
-    List<CurrentTaughtHandle> getCurrentTaught(int teacherId);
+    List<CurrentTaughtHandle> getCurrentTaught(int lectureId);
 
    ListStudentInCourseResponse getListStuInCourse(int classId, String keySearch, Pageable pageable);
 

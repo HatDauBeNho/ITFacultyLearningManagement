@@ -1,6 +1,7 @@
 package Haui.ITFacultyLearningManagement.service.impl;
 
-import Haui.ITFacultyLearningManagement.custom.dashboard.response.DashboardForStudentResponse;
+import Haui.ITFacultyLearningManagement.custom.dashboard.handle.DashboardLectureHandle;
+import Haui.ITFacultyLearningManagement.custom.dashboard.handle.DashboardStudentHandle;
 import Haui.ITFacultyLearningManagement.repository.CourseRegistrationRepository;
 import Haui.ITFacultyLearningManagement.repository.CourseRepository;
 import Haui.ITFacultyLearningManagement.repository.SemesterRepository;
@@ -18,10 +19,18 @@ public class DashboardServiceImpl implements DashboardService {
     private CourseRepository courseRepository;
 
     @Autowired
+    private CourseRegistrationRepository courseRegistrationRepository;
+
+    @Autowired
     private SemesterRepository semesterRepository;
 
     @Override
-    public DashboardForStudentResponse getDashboardForStudent() {
-        return null;
+    public DashboardStudentHandle getDashboardForStudent(int studentId) {
+        return semesterRepository.getDashboardStudent(studentId);
+    }
+
+    @Override
+    public DashboardLectureHandle getDashboardForLecture(int lectureId) {
+        return semesterRepository.getDashboardLecture(lectureId);
     }
 }

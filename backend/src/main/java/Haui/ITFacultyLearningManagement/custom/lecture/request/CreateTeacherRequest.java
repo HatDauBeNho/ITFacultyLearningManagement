@@ -1,4 +1,4 @@
-package Haui.ITFacultyLearningManagement.custom.teacher.request;
+package Haui.ITFacultyLearningManagement.custom.lecture.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

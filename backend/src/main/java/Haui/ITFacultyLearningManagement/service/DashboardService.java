@@ -1,7 +1,10 @@
 package Haui.ITFacultyLearningManagement.service;
 
-import Haui.ITFacultyLearningManagement.custom.dashboard.response.DashboardForStudentResponse;
+import Haui.ITFacultyLearningManagement.custom.dashboard.handle.DashboardLectureHandle;
+import Haui.ITFacultyLearningManagement.custom.dashboard.handle.DashboardStudentHandle;
 
 public interface DashboardService {
-    DashboardForStudentResponse getDashboardForStudent();
+    DashboardStudentHandle getDashboardForStudent(int studentId);
+
+    DashboardLectureHandle getDashboardForLecture(int lectureId);
 }

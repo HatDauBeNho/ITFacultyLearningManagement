@@ -23,8 +23,8 @@ public class Classroom {
     private Integer currentStudent;
     @Column(name = "maximum_student")
     private Integer maximumStudent;
-    @Column(name = "teacher_id")
-    private Integer teacherId;
+    @Column(name = "lecture_id")
+    private Integer lectureId;
     @Column(name = "course_id")
     private Integer courseId;
     @Column(name = "semester_id")
@@ -36,9 +36,9 @@ public class Classroom {
     @Column(name = "update_time")
     private LocalDateTime updateTime;
 
-    public Classroom(Integer maximumStudent, Integer teacherId, Integer courseId, Integer semesterId) {
+    public Classroom(Integer maximumStudent, Integer lectureId, Integer courseId, Integer semesterId) {
         this.maximumStudent = maximumStudent;
-        this.teacherId = teacherId;
+        this.lectureId = lectureId;
         this.courseId = courseId;
         this.semesterId = semesterId;
         this.status = 1;
