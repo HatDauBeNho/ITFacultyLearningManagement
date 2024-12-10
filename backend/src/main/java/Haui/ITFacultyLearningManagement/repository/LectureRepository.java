@@ -18,7 +18,7 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
             """, nativeQuery = true)
     Optional<Lecture> findByName(String name);
 
-    @Query(value = "SELECT * FROM tb_lecture t LEFT OUTER JOIN infos i on t.infoId=i.infoId WHERE  lecture_id= ?1 LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM tb_lecture t LEFT OUTER JOIN infos i on t.infoId = i.infoId WHERE  lecture_id= ?1 LIMIT 1", nativeQuery = true)
     Optional<Info> getTeacherInfo(int id);
 
     @Query(value = """

@@ -141,6 +141,7 @@ public class CourseController {
         }
     }
 
+    //sua lai. cho phep dang ky lop hoc phần ở kỳ khác nhau. chua có check course condition
     @PostMapping("/register")
     public  ResponseEntity<?> registerCourse(@RequestParam("classId") Integer classId){
         try {
