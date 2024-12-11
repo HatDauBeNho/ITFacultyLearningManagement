@@ -1,5 +1,6 @@
 package Haui.ITFacultyLearningManagement.repository;
 
+import Haui.ITFacultyLearningManagement.custom.dashboard.handle.StatisticForLectureHandle;
 import Haui.ITFacultyLearningManagement.entities.Info;
 import Haui.ITFacultyLearningManagement.entities.Lecture;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,4 +32,14 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
             select count(lecture_id) from tb_lecture
             """,nativeQuery = true)
     int countLecture();
+
+    @Query(value = """
+            SELECT s.name AS semesterName, COUNT(DISTINCT c.class_id) AS count
+            FROM tb_semester AS s
+            JOIN tb_classroom AS c ON s.semester_id = c.semester_id
+            JOIN tb_lecture AS l ON c.lecture_id = l.lecture_id
+            WHERE l.lecture_id = :lectureId
+            GROUP BY s.semester_id;
+            """,nativeQuery = true)
+    List<StatisticForLectureHandle> getStatisticForLecture(@Param("lectureId") int lectureId);
 }

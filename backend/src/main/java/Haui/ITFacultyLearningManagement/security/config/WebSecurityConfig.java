@@ -72,6 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             "/api/course/currentTaught",
             "/api/course/getListStudent",
             "/api/result/enter",
+            "/api/dashboard/admin/statisticCurrentTaught",
             "/api/dashboard/lecture"
     };
 
@@ -81,7 +82,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             "/api/course/cancel",
             "/api/result/get",
             "/api/classroom/search",
-            "/api/dashboard/student"
+            "/api/dashboard/student",
+            "/api/dashboard/statisticPoint",
+
     };
 
     @Override

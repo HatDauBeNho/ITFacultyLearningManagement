@@ -1,5 +1,6 @@
 package Haui.ITFacultyLearningManagement.repository;
 
+import Haui.ITFacultyLearningManagement.custom.dashboard.response.StatisticStudentResponse;
 import Haui.ITFacultyLearningManagement.custom.student.handle.SearchStudentHandle;
 import Haui.ITFacultyLearningManagement.entities.Info;
 import Haui.ITFacultyLearningManagement.entities.Student;
@@ -42,4 +43,29 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
             select count(student_id) from tb_student
             """,nativeQuery = true)
     int countStudent();
+
+    @Query(value = """
+            WITH courseRegistration AS (
+                 SELECT cr.point
+                 FROM tb_course_registration cr
+                 INNER JOIN tb_classroom cl ON cr.class_id = cl.class_id
+                 WHERE cr.student_id = :studentId
+                 AND cr.create_time IN (SELECT MAX(cr2.create_time)
+                    FROM tb_course_registration cr2
+                    INNER JOIN tb_classroom cl2 ON cr2.class_id = cl2.class_id
+                    WHERE cr2.student_id = :studentId
+                    GROUP BY cl2.course_id)
+                 )
+                 SELECT
+                     COUNT(*) FILTER (WHERE point < 4) AS "nhoHon4",
+                     COUNT(*) FILTER (WHERE point >= 4 AND point < 5) AS "lonHon4",
+                     COUNT(*) FILTER (WHERE point >= 5 AND point < 6) AS "lonHon5",
+                     COUNT(*) FILTER (WHERE point >= 6 AND point < 7) AS "lonHon6",
+                     COUNT(*) FILTER (WHERE point >= 7 AND point < 8) AS "lonHon7",
+                     COUNT(*) FILTER (WHERE point >= 8 AND point < 9) AS "lonHon8",
+                     COUNT(*) FILTER (WHERE point >= 9 AND point < 10) AS "lonHon9",
+                     COUNT(*) FILTER (WHERE point = 10) AS "bang10"
+                 FROM courseRegistration
+        """,nativeQuery = true)
+    StatisticStudentResponse getStatisticPoint(@Param("studentId") int studentId);
 }
