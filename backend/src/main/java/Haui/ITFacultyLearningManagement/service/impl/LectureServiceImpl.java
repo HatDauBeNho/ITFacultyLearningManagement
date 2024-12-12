@@ -1,11 +1,13 @@
 package Haui.ITFacultyLearningManagement.service.impl;
 
+import Haui.ITFacultyLearningManagement.custom.lecture.handle.SearchLectureHandle;
 import Haui.ITFacultyLearningManagement.entities.Lecture;
 import Haui.ITFacultyLearningManagement.repository.AccountRepository;
 import Haui.ITFacultyLearningManagement.repository.LectureRepository;
 import Haui.ITFacultyLearningManagement.service.AccountService;
 import Haui.ITFacultyLearningManagement.service.LectureService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -48,5 +50,15 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public Optional<Lecture> findByAccountId(int accountId) {
         return lectureRepository.findByAccountId(accountId);
+    }
+
+    @Override
+    public List<SearchLectureHandle> getLectureWithSearch(String keySearch, Pageable pageable) {
+        return lectureRepository.getLectureWithSearch(keySearch,pageable);
+    }
+
+    @Override
+    public Integer getTotalLecture(String keySearch) {
+        return lectureRepository.getTotalLecture(keySearch);
     }
 }

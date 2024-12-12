@@ -1,6 +1,5 @@
 package Haui.ITFacultyLearningManagement.controller;
 
-import Haui.ITFacultyLearningManagement.custom.course.response.SearchCourseResponse;
 import Haui.ITFacultyLearningManagement.custom.data.CustomResponse;
 import Haui.ITFacultyLearningManagement.custom.student.handle.SearchStudentHandle;
 import Haui.ITFacultyLearningManagement.custom.student.request.SearchStudentRequest;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.JpaSort;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +20,6 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    //chua test
     @PostMapping("/search")
     public ResponseEntity<?> getListStudentWithSearch(@RequestBody SearchStudentRequest request)
     {

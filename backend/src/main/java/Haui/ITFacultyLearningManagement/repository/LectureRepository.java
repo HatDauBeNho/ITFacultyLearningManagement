@@ -1,8 +1,10 @@
 package Haui.ITFacultyLearningManagement.repository;
 
 import Haui.ITFacultyLearningManagement.custom.dashboard.handle.StatisticForLectureHandle;
+import Haui.ITFacultyLearningManagement.custom.lecture.handle.SearchLectureHandle;
 import Haui.ITFacultyLearningManagement.entities.Info;
 import Haui.ITFacultyLearningManagement.entities.Lecture;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -42,4 +44,22 @@ public interface LectureRepository extends JpaRepository<Lecture,Integer> {
             GROUP BY s.semester_id;
             """,nativeQuery = true)
     List<StatisticForLectureHandle> getStatisticForLecture(@Param("lectureId") int lectureId);
+
+    @Query(value = """
+            select
+                i.full_name as fullName, i.date_of_birth as dateOfBirth,
+                i.gender, i.address,  i.phone_number as phoneNumber, i.email, l.average_rating as averageRating
+            from tb_lecture l
+            left join tb_info i on i.info_id = l.info_id
+            where unaccent(i.full_name) ILIKE  %:keySearch%
+            """,nativeQuery = true)
+    List<SearchLectureHandle> getLectureWithSearch(@Param("keySearch") String keySearch, Pageable pageable);
+
+    @Query(value = """
+            select count(i.full_name)
+            from tb_lecture l
+            left join tb_info i on i.info_id = l.info_id
+            WHERE unaccent(i.full_name) ILIKE  %:keySearch%
+            """,nativeQuery = true)
+    Integer getTotalLecture(@Param("keySearch") String keySearch);
 }

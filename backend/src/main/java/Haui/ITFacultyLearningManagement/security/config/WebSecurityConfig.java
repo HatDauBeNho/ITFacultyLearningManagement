@@ -65,7 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             "/api/classroom/delete",
             "/api/classroom/search",
             "/api/dashboard/admin",
-            "/api/student/**"
+            "/api/student/**",
+            "/api/lecture/**"
     };
 
     String[] lectureApi = {
